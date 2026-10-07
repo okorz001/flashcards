@@ -17,14 +17,14 @@ export NVM_DIR="${NVM_DIR:-/opt/nvm}"
 . "$NVM_DIR/nvm.sh" --no-use
 
 nvm install
-nvm use
 
-# Persist the nvm-selected Node for the session's later commands.
+# Persist the nvm-selected Node for the session's later commands. Sourcing
+# nvm.sh without --no-use auto-activates .nvmrc, matching the version just
+# installed above.
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   {
     echo "export NVM_DIR=\"$NVM_DIR\""
     echo ". \"$NVM_DIR/nvm.sh\""
-    echo "nvm use >/dev/null"
   } >> "$CLAUDE_ENV_FILE"
 fi
 
