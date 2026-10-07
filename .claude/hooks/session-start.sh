@@ -10,37 +10,22 @@ fi
 cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/../..}"
 
 export NVM_DIR="${NVM_DIR:-/opt/nvm}"
+# --no-use skips nvm's auto-activation of .nvmrc on source, which otherwise
+# fails (and, under `set -e`, aborts this whole script) on a fresh container
+# where no version is installed yet.
 # shellcheck disable=SC1091
-. "$NVM_DIR/nvm.sh"
+. "$NVM_DIR/nvm.sh" --no-use
 
-# nvm's version resolution/download and npm's registry fetch can fail on a
-# transient network blip during container boot. Retry a few times so one bad
-# request doesn't silently skip the rest of the hook.
-retry() {
-  local attempts=3
-  local delay=5
-  local n=1
-  until "$@"; do
-    if [ "$n" -ge "$attempts" ]; then
-      echo "session-start: '$*' failed after $attempts attempts" >&2
-      return 1
-    fi
-    echo "session-start: '$*' failed (attempt $n/$attempts), retrying in ${delay}s" >&2
-    sleep "$delay"
-    n=$((n + 1))
-  done
-}
-
-retry nvm install
+nvm install
 nvm use
 
 # Persist the nvm-selected Node for the session's later commands.
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   {
     echo "export NVM_DIR=\"$NVM_DIR\""
-    echo ". \"$NVM_DIR/nvm.sh\""
+    echo ". \"$NVM_DIR/nvm.sh\" --no-use"
     echo "nvm use >/dev/null"
   } >> "$CLAUDE_ENV_FILE"
 fi
 
-retry npm install
+npm install
