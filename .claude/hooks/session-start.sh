@@ -23,7 +23,7 @@ nvm use
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   {
     echo "export NVM_DIR=\"$NVM_DIR\""
-    echo ". \"$NVM_DIR/nvm.sh\" --no-use"
+    echo ". \"$NVM_DIR/nvm.sh\""
     echo "nvm use >/dev/null"
   } >> "$CLAUDE_ENV_FILE"
 fi
