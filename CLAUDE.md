@@ -21,18 +21,31 @@ services.
   plan turns out to be wrong or incomplete, stop and raise it on the issue
   instead of improvising. For work requested outside an issue, propose a plan
   and get approval before implementing.
+- **Treat the plan as literal.** When the plan says to copy, generate, or use
+  something as-is, do exactly that. Do not remove, add, or modify parts of it.
+  If something blocks or breaks the literal plan, stop and raise it on the issue
+  with options and a recommendation. Do not work around it and report
+  afterward.
 - **Do not make arbitrary choices.** If a decision is not already settled by
   this file, the `docs/` directory, the issue, or existing code, ask. This
-  includes adding or replacing a dependency, choosing a library or tool,
-  introducing a new convention or pattern, changing the data model or storage
-  format, and UX or visual design decisions. Present the options with their
-  tradeoffs and a recommendation, then wait for an answer.
+  includes adding or replacing a dependency, pinning or choosing a dependency
+  version or config value the issue does not specify, choosing a library or
+  tool, introducing a new convention or pattern, changing the data model or
+  storage format, and UX or visual design decisions. Present the options with
+  their tradeoffs and a recommendation, then wait for an answer.
 - **Do not guess at requirements.** When a request is ambiguous, ask clarifying
   questions instead of filling gaps with assumptions.
 - **Stay in scope.** Do not refactor, rename, or "improve" unrelated code as
   part of a change. File an issue instead (see GitHub below).
 - **Ship code with tests.** Code changes include unit tests for the behavior
   they add or change, in the same change.
+- **Do not open a PR for partial work.** If any part of the plan cannot be
+  completed (blocked tool, denied permission, failing check), stop and report
+  what is done and what is not. Partial work may be pushed to the branch, but a
+  PR is opened only once the plan is fully implemented and all checks pass.
+- **Report every deviation.** List any deviation from the plan, however small,
+  in the PR description. If you would write "choices I made", you should have
+  asked instead.
 
 ## Commits
 
