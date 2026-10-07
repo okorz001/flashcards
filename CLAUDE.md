@@ -81,6 +81,9 @@ Every PR must reference the issue it completes using a closing keyword in the PR
 description (e.g. `Closes #12`), so the issue closes automatically when the PR
 merges.
 
+Do not add AI attribution to PR descriptions or comments yourself. The GitHub
+connector appends its own attribution footer, so adding another duplicates it.
+
 Never rebase or force push a branch that has an open PR, unless the PR is a
 draft. Once a PR is marked ready for review, its history must only move forward.
 
