@@ -110,6 +110,10 @@ merges.
 Do not add AI attribution to PR descriptions or comments yourself. The GitHub
 connector appends its own attribution footer, so adding another duplicates it.
 
+When editing a PR description or comment that already has the GitHub
+connector's attribution footer, never delete it. A full-body update (e.g.
+replacing the whole description) must carry the existing footer forward.
+
 Never rebase or force push a branch that has an open PR, unless the PR is a
 draft. Once a PR is marked ready for review, its history must only move forward.
 
