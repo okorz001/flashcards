@@ -24,8 +24,7 @@ services.
 - **Treat the plan as literal.** When the plan says to copy, generate, or use
   something as-is, do exactly that. Do not remove, add, or modify parts of it.
   If something blocks or breaks the literal plan, stop and raise it on the issue
-  with options and a recommendation. Do not work around it and report
-  afterward.
+  with options and a recommendation. Do not work around it and report afterward.
 - **Do not make arbitrary choices.** If a decision is not already settled by
   this file, the `docs/` directory, the issue, or existing code, ask. This
   includes adding or replacing a dependency, pinning or choosing a dependency
@@ -46,6 +45,20 @@ services.
 - **Report every deviation.** List any deviation from the plan, however small,
   in the PR description. If you would write "choices I made", you should have
   asked instead.
+
+## Commands
+
+| Script                 | Purpose                                         |
+| ---------------------- | ----------------------------------------------- |
+| `npm run dev`          | Start the development server                    |
+| `npm run build`        | Build the static site into `out/`               |
+| `npm run format`       | Format the repository with Prettier             |
+| `npm run format:check` | Check formatting without changing files         |
+| `npm run lint`         | Lint `src/` with ESLint, failing on any warning |
+| `npm test`             | Run unit tests with Vitest                      |
+| `npm run verify`       | Run format check, lint, test, and build         |
+
+`npm run verify` must pass before proposing a code change.
 
 ## Commits
 
