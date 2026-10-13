@@ -139,7 +139,14 @@ in-depth detail.
 
 ## Docs Style
 
-All Markdown section headers and table headers must use title case.
+- Every Markdown doc starts with a `#` title, followed by a brief 1-3 sentence
+  description starting with "This document".
+- Writing is brief; avoid filler.
+- Avoid excessive semicolons. Em dashes are fine in a definition list, but
+  should be used sparingly to combine clauses.
+- Prefer linking directly from the relevant word in prose over standalone
+  parenthetical notes like "(see ...)".
+- Section headers and table headers are title cased.
 
 ## Code Style
 
