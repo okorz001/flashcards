@@ -165,6 +165,12 @@ plan needs significant changes, as described in
 
 ### CI
 
+Before waiting for CI, an agent checks whether the PR has a merge conflict with
+`main`, because GitHub does not run CI on a conflicted PR. If it does, the agent
+merges `main` into its branch, resolves the conflict, and pushes. It never
+rebases. If it cannot resolve the conflict, it treats it like a CI failure it
+cannot fix.
+
 After every push to a PR, an agent waits for CI to finish. If CI passes, the
 agent continues. If CI fails, the agent first comments on the PR with the
 failing check, so the failure is recorded even if the run ends abruptly, then
