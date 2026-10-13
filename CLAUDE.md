@@ -86,8 +86,8 @@ Every issue is labeled as either `bug` or `enhancement`.
 [Status labels](docs/agent-workflow.md#labels) track where an issue stands.
 Label names use lowercase kebab-case (e.g. `needs-triage`).
 
-Agents may file issues for work they discover but do not do as part of the
-current change: bugs, refactors, or feature ideas. These issues must have the
+You may file issues for work you discover but do not do as part of the current
+change: bugs, refactors, or feature ideas. These issues must have the
 [`needs-triage`](docs/agent-workflow.md#labels) label. Describe the problem or
 proposal and how it was found; for bugs, include how to reproduce it if known.
 Do not act on it in the current change unless asked.
@@ -144,6 +144,9 @@ in-depth detail.
 - Prefer linking directly from the relevant word in prose over standalone
   parenthetical notes like "(see ...)".
 - Section headers and table headers are title cased.
+- Use "agent" only for the role defined in the
+  [agent workflow](docs/agent-workflow.md#roles). Refer to Claude in general as
+  "Claude", or as "you" in `CLAUDE.md`.
 
 ## Code Style
 
