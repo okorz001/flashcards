@@ -63,7 +63,9 @@ or `blocked` and adds `ready-for-agent`.
 
 An agent implements an issue as follows:
 
-1. Remove `ready-for-agent`, so no other agent starts the same issue.
+1. Remove `ready-for-agent`, so no other agent starts the same issue. If the
+   label cannot be removed because it is already gone, another agent may have
+   started the issue, so stop without doing anything else.
 2. Check that the issue's author is a collaborator. If not, comment that agents
    only work on issues opened by collaborators, and stop.
 3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
