@@ -47,13 +47,13 @@ pushes and deletion.
 Every issue is labeled as either `bug` or `enhancement`. Status labels show
 where an issue stands:
 
-| Label             | Meaning                                                             |
-| ----------------- | ------------------------------------------------------------------- |
-| `needs-triage`    | Needs review by a collaborator before an agent may start it         |
-| `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it     |
-| `agent-blocked`   | Work stopped on a question or a rejected PR, and needs triage again |
-| `agent-failed`    | An agent run failed, and a collaborator checks why before a retry   |
-| `external-report` | Opened by someone who is not a collaborator, so never worked on     |
+| Label             | Meaning                                                           |
+| ----------------- | ----------------------------------------------------------------- |
+| `needs-triage`    | Needs review by a collaborator before an agent may start it       |
+| `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it   |
+| `agent-blocked`   | An agent stopped on a question, and needs triage again            |
+| `agent-failed`    | An agent run failed, and a collaborator checks why before a retry |
+| `external-report` | Opened by someone who is not a collaborator, so never worked on   |
 
 Automation labels every new issue. An issue opened by anyone other than a
 collaborator or an agent gets `external-report`. Any other issue gets
@@ -84,7 +84,7 @@ stateDiagram-v2
     InProgress --> Blocked: Agent has a question
     InProgress --> InReview: Agent opens PR
     InReview --> InReview: Collaborator submits review, agent addresses it
-    InReview --> Blocked: Collaborator closes PR without merging
+    InReview --> NeedsTriage: Collaborator closes PR without merging
     InReview --> [*]: Collaborator merges PR
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
@@ -140,7 +140,7 @@ the issue needs triage. Approvals start nothing.
 ### Rejected Pull Requests
 
 If the plan was sound but a collaborator decides not to merge, they close the PR
-without merging. Automation then adds `agent-blocked` to the issue, comments on
+without merging. Automation then adds `needs-triage` to the issue, comments on
 it with a link to the closed PR, and deletes the PR's branch, so the next agent
 starts from `main`. The closed PR keeps its commits and discussion for triage.
 
