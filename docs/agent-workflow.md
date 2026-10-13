@@ -138,10 +138,18 @@ An agent implements an issue as follows:
 
 When a collaborator submits a review with comments or requested changes on a PR
 from an [issue branch](../CLAUDE.md#branches) in this repository whose issue is
-labeled `with-agent`, an agent addresses every comment in that review: it pushes
-fixes to the PR branch and replies on each thread. If a comment asks for
-something outside the issue's plan, the agent replies saying so and makes no
-change. Approvals start nothing.
+labeled `with-agent`, an agent addresses all unaddressed collaborator feedback
+on the PR, not only the review that started the run:
+
+- Every unresolved review thread. The agent pushes a fix, replies, and resolves
+  the thread. A collaborator who is not satisfied reopens the thread or replies
+  in it.
+- The summary text of every collaborator review submitted after the agent's last
+  closing comment on the PR, which cannot be resolved. The agent replies to it
+  in its closing comment.
+
+If a comment asks for something outside the issue's plan, the agent replies
+saying so and makes no change. Approvals start nothing.
 
 The plan does not change while its PR is open. A collaborator asks for small
 changes in a review, or closes the PR to send the issue back to triage when the
@@ -175,7 +183,15 @@ A collaborator can do the same tasks in an interactive Claude Code session.
 
 Each run starts fresh. Everything a run needs to continue earlier work is on
 GitHub: the issue body and comments, the issue's branch, and the PR and its
-reviews. At most one run works on an issue or PR at a time.
+reviews.
+
+At most one run works on an issue at a time. Implementation and review runs for
+the same issue share one GitHub Actions concurrency group, keyed by the issue
+number, which review runs take from the PR's issue branch. A new run waits for
+the current one to finish and never cancels it. GitHub keeps only one waiting
+run per group and cancels older waiting runs, which loses nothing because the
+next review run addresses all unaddressed feedback. A collaborator waits for any
+active run to finish before working on the branch themselves.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
 finished or stopped early, so those threads are a complete log of agent
@@ -183,12 +199,12 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
-If a run fails before it can comment, for example from a crash, timeout, or
-usage limit, automation replaces `with-agent` with `agent-failed` on the issue
-and comments with a link to the failed run. A collaborator retries by re-adding
-`ready-for-agent` if the issue has no PR, or by re-adding `with-agent` and
-submitting the review again if it does. GitHub's re-run button does not work for
-issues, because the run's label is already gone. A new run removes
+If a run fails or is cancelled before it can comment, for example from a crash,
+timeout, or usage limit, automation replaces `with-agent` with `agent-failed` on
+the issue and comments with a link to the failed run. A collaborator retries by
+re-adding `ready-for-agent` if the issue has no PR, or by re-adding `with-agent`
+and submitting the review again if it does. GitHub's re-run button does not work
+for issues, because the run's label is already gone. A new run removes
 `agent-failed` when it starts.
 
 ## Accepted Tradeoffs
@@ -196,3 +212,5 @@ issues, because the run's label is already gone. A new run removes
 - Agents only work on PRs from issue branches. A PR without an issue cannot be
   handed to agents, which costs little because every agent task needs a plan in
   an issue anyway.
+- Agents ignore PR conversation comments, which are not part of a review and
+  cannot be resolved. Requests for an agent go in a review.
