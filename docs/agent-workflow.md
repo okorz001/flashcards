@@ -139,10 +139,12 @@ the issue needs triage. Approvals start nothing.
 
 ### Rejected Pull Requests
 
-If the plan was sound but a collaborator decides not to merge, they close the PR
-without merging. Automation then adds `needs-triage` to the issue, comments on
-it with a link to the closed PR, and deletes the PR's branch, so the next agent
-starts from `main`. The closed PR keeps its commits and discussion for triage.
+A collaborator rejects a PR by closing it without merging. If the PR is labeled
+`with-agent` and comes from an [issue branch](../CLAUDE.md#branches) in this
+repository, automation then adds `needs-triage` to that issue if it is still
+open, comments on it with a link to the closed PR, and deletes the PR's branch,
+so the next agent starts from `main`. The closed PR keeps its commits and
+discussion for triage. Other closed PRs are left alone.
 
 ### Merge
 
