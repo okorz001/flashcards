@@ -163,6 +163,15 @@ changes in a review, or closes the PR to send the issue back to triage when the
 plan needs significant changes, as described in
 [rejected pull requests](#rejected-pull-requests).
 
+### CI
+
+After every push to a PR, an agent waits for CI to finish. If CI passes, the
+agent continues. If CI fails, the agent first comments on the PR with the
+failing check, so the failure is recorded even if the run ends abruptly, then
+fixes it and waits again. If it cannot fix the failure, it comments with what it
+tried, the question, options, and a recommendation, and stops. The issue keeps
+`with-agent`, and a collaborator answers in a review.
+
 ### Rejected Pull Requests
 
 A collaborator rejects a PR by closing it without merging. If the PR comes from
