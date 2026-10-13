@@ -32,10 +32,10 @@ starts a run when a human collaborator adds `ready-for-agent`, and the Claude
 bot is never listed in `allowed_bots`. In an interactive session, Claude adds
 `ready-for-agent` only when the collaborator explicitly asks.
 
-Agents only get the GitHub tools they need: commenting, adding and removing
-labels, pushing branches, opening PRs, and replying to reviews. They get no tool
-that edits an issue, and no shell access to `gh` or `curl`, so the instructions
-above are enforced rather than trusted.
+Agents only get the GitHub tools they need: commenting, filing issues, adding
+and removing labels, pushing branches, opening PRs, and replying to reviews.
+They get no tool that edits an existing issue, and no shell access to `gh` or
+`curl`, so the instructions above are enforced rather than trusted.
 
 Agents never merge PRs, close issues, or delete remote branches. Branch
 protection on `main` requires changes to go through a PR and forbids force
