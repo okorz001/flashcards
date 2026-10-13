@@ -66,12 +66,12 @@ An agent implements an issue as follows:
 1. Remove `ready-for-agent`, so no other agent starts the same issue.
 2. Check that the issue's author is a collaborator. If not, comment that agents
    only work on issues opened by collaborators, and stop.
-3. If a branch `issue-<number>/…` exists, continue it: it holds work from a
-   blocked run. Otherwise, create a new branch from `main`.
+3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
+   work from a blocked run. Otherwise, create a new branch from `main`.
 4. Implement the plan in the issue body.
-5. If blocked, push the work to the branch, comment on the issue with what is
-   done, what is not, the question with options and a recommendation, and the
-   branch name. Then add `blocked` and stop.
+5. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
+   comment on the issue with what is done, what is not, the question with
+   options and a recommendation, and the branch name, then add `blocked`.
 6. When complete and all checks pass, open a PR that closes the issue.
 
 ### Review
@@ -92,12 +92,6 @@ starts from `main`. The closed PR keeps its commits and discussion for triage.
 ### Merge
 
 When a collaborator merges the PR, its closing keyword closes the issue.
-
-## Branches
-
-Branch names are short, descriptive, and kebab-case, e.g.
-`label-lifecycle-rules`. Branches for an issue start with the issue number:
-`issue-<number>/<description>`, e.g. `issue-5/ci-workflow`.
 
 ## Starting Agents
 
