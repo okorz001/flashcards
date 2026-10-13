@@ -51,7 +51,8 @@ where an issue stands:
 | ----------------- | ------------------------------------------------------------------- |
 | `needs-triage`    | Needs review by a collaborator before an agent may start it         |
 | `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it     |
-| `blocked`         | Work stopped on a question or a rejected PR, and needs triage again |
+| `agent-blocked`   | Work stopped on a question or a rejected PR, and needs triage again |
+| `agent-failed`    | An agent run failed, and a collaborator checks why before a retry   |
 | `external-report` | Opened by someone who is not a collaborator, so never worked on     |
 
 Automation labels every new issue. An issue opened by anyone other than a
@@ -87,22 +88,26 @@ stateDiagram-v2
     InReview --> [*]: Collaborator merges PR
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
+    InProgress --> Failed: Run fails
+    Failed --> ReadyForAgent: Collaborator retries
 
     NeedsTriage: needs-triage
     ExternalReport: external-report
     ReadyForAgent: ready-for-agent
     InProgress: In progress (no status label)
-    Blocked: blocked
+    Blocked: agent-blocked
+    Failed: agent-failed
     InReview: In review (PR open, no status label)
 ```
 
 ### Triage
 
-A collaborator reviews an issue labeled `needs-triage` or `blocked`, and writes
-or updates the plan in the issue body. The issue body is the authoritative plan:
-comments are for triage discussion and the record, and any decision that changes
-the plan is written into the body. When the plan is complete, a collaborator
-removes `needs-triage` or `blocked` and adds `ready-for-agent`.
+A collaborator reviews an issue labeled `needs-triage` or `agent-blocked`, and
+writes or updates the plan in the issue body. The issue body is the
+authoritative plan: comments are for triage discussion and the record, and any
+decision that changes the plan is written into the body. When the plan is
+complete, a collaborator removes `needs-triage` or `agent-blocked` and adds
+`ready-for-agent`.
 
 ### Implementation
 
@@ -119,7 +124,7 @@ An agent implements an issue as follows:
 4. Implement the plan in the issue body.
 5. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
    comment on the issue with what is done, what is not, the question with
-   options and a recommendation, and the branch name, then add `blocked`.
+   options and a recommendation, and the branch name, then add `agent-blocked`.
 6. When complete and all checks pass, open a PR labeled `with-agent` that closes
    the issue and any external report it links to.
 
@@ -135,8 +140,8 @@ the issue needs triage. Approvals start nothing.
 ### Rejected Pull Requests
 
 If the plan was sound but a collaborator decides not to merge, they close the PR
-without merging. Automation then adds `blocked` to the issue, comments on it
-with a link to the closed PR, and deletes the PR's branch, so the next agent
+without merging. Automation then adds `agent-blocked` to the issue, comments on
+it with a link to the closed PR, and deletes the PR's branch, so the next agent
 starts from `main`. The closed PR keeps its commits and discussion for triage.
 
 ### Merge
@@ -165,6 +170,9 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
-If a run started by GitHub Actions fails before it can comment, for example from
-a crash, timeout, or usage limit, automation comments instead with a link to the
-failed run.
+If a run fails before it can comment, for example from a crash, timeout, or
+usage limit, automation adds `agent-failed` to the issue or PR and comments with
+a link to the failed run. A collaborator retries by re-adding `ready-for-agent`
+to the issue, or by submitting the review again on the PR. GitHub's re-run
+button does not work for issues, because the run's label is already gone. A new
+run removes `agent-failed` when it starts.
