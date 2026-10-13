@@ -151,6 +151,13 @@ on the PR, not only the review that started the run:
 If a comment asks for something outside the issue's plan, the agent replies
 saying so and makes no change. Approvals start nothing.
 
+If the agent cannot address a thread, for example because the comment is
+ambiguous, comments conflict, or the fix breaks a check, it pushes no change for
+that thread. It replies with the question, options, and a recommendation, leaves
+the thread unresolved, and lists it in its closing comment. The issue keeps
+`with-agent`. A collaborator answers in the thread and submits a review, and the
+next run picks the thread up again.
+
 The plan does not change while its PR is open. A collaborator asks for small
 changes in a review, or closes the PR to send the issue back to triage when the
 plan needs significant changes, as described in
