@@ -1,7 +1,8 @@
 # Agent Workflow
 
-How work moves from an idea to a merged pull request, and who acts at each step.
-Most implementation is done by agents; the owner plans, decides, and reviews.
+This document describes how work moves from an idea to a merged pull request,
+and who acts at each step. Agents do most of the implementation, while the owner
+plans, decides, and reviews.
 
 ## Roles
 
@@ -16,11 +17,11 @@ Most implementation is done by agents; the owner plans, decides, and reviews.
 Every issue is labeled as either `bug` or `enhancement`. Status labels show
 where an issue stands:
 
-| Label             | Meaning                                                         |
-| ----------------- | --------------------------------------------------------------- |
-| `needs-triage`    | Filed by an agent; not yet reviewed by the owner                |
-| `ready-for-agent` | Agreed, with a plan in the issue body; an agent may start it    |
-| `blocked`         | Work stopped on a question or a rejected PR; needs triage again |
+| Label             | Meaning                                                             |
+| ----------------- | ------------------------------------------------------------------- |
+| `needs-triage`    | Filed by an agent and not yet reviewed by the owner                 |
+| `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it     |
+| `blocked`         | Work stopped on a question or a rejected PR, and needs triage again |
 
 An issue with no status label is either waiting for triage by the owner, or
 being worked on by an agent.
@@ -76,8 +77,8 @@ An agent implements an issue as follows:
 When the owner submits a review on a PR with comments or requested changes, an
 agent addresses every comment: it pushes fixes to the PR branch and replies on
 each thread. If a comment asks for something outside the issue's plan, the agent
-replies saying so and makes no change; the owner decides whether the issue needs
-triage. Approvals start nothing.
+replies saying so and makes no change, leaving the owner to decide whether the
+issue needs triage. Approvals start nothing.
 
 ### Rejected Pull Requests
 
