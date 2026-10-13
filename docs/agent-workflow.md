@@ -64,8 +64,8 @@ or `blocked` and adds `ready-for-agent`.
 An agent implements an issue as follows:
 
 1. Remove `ready-for-agent`, so no other agent starts the same issue. If
-   removing the label fails for any reason, stop without doing anything else. A
-   missing label means another agent may have already started the issue.
+   removing the label fails for any reason, stop without changing anything else.
+   A missing label means another agent may have already started the issue.
 2. Check that the issue's author is a collaborator. If not, comment that agents
    only work on issues opened by collaborators, and stop.
 3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
@@ -108,6 +108,12 @@ GitHub Actions:
 Each run starts fresh. Everything a run needs to continue earlier work is on
 GitHub: the issue body and comments, the issue's branch, and the PR and its
 reviews. At most one run works on an issue or PR at a time.
+
+Every run ends with a comment on the issue or PR it worked on, whether it
+finished or stopped early, so those threads are a complete log of agent
+activity. The comment states the outcome and why: a link to the opened PR, a
+summary of the review fixes pushed, the question that blocked it, or the reason
+it stopped.
 
 ## Trust
 
