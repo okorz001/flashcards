@@ -119,14 +119,17 @@ An agent implements an issue as follows:
 2. Check that the issue was opened by a collaborator or an agent, as required by
    [trust](#trust). If not, comment that agents only work on issues opened by
    collaborators or agents, and stop.
-3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
+3. Check that the issue is open and has no open PR. If not, comment saying so,
+   and stop.
+4. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
    work from a blocked run. Otherwise, create a new branch from `main`.
-4. Implement the plan in the issue body.
-5. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
+5. Implement the plan in the issue body.
+6. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
    comment on the issue with what is done, what is not, the question with
    options and a recommendation, and the branch name, then add `agent-blocked`.
-6. When complete and all checks pass, open a PR labeled `with-agent` that closes
-   the issue and any external report it links to.
+7. When complete and all checks pass, check again that the issue is still open.
+   If it is, open a PR labeled `with-agent` that closes the issue and any
+   external report it links to. If not, push the work and comment instead.
 
 ### Review
 
@@ -134,8 +137,12 @@ When a collaborator submits a review with comments or requested changes on a PR
 labeled `with-agent` from a branch in this repository, an agent addresses every
 comment in that review: it pushes fixes to the PR branch and replies on each
 thread. If a comment asks for something outside the issue's plan, the agent
-replies saying so and makes no change, leaving a collaborator to decide whether
-the issue needs triage. Approvals start nothing.
+replies saying so and makes no change. Approvals start nothing.
+
+The plan does not change while its PR is open. A collaborator asks for small
+changes in a review, or closes the PR to send the issue back to triage when the
+plan needs significant changes, as described in
+[rejected pull requests](#rejected-pull-requests).
 
 ### Rejected Pull Requests
 
