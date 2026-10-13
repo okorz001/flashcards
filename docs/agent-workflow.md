@@ -6,11 +6,14 @@ collaborators plan, decide, and review.
 
 ## Roles
 
-| Role         | Who                                                                                                                                                |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collaborator | A person with write access to the repository. Triages issues, writes plans, and reviews PRs                                                        |
-| Agent        | A Claude Code session. Acts on GitHub as the collaborator who started it, or as the Claude GitHub App's bot account when started by GitHub Actions |
-| Automation   | Plain GitHub Actions workflows that update labels and branches, no AI                                                                              |
+| Role         | Who                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| Collaborator | A person with write access to the repository. Triages issues, writes plans, and reviews PRs |
+| Agent        | A headless Claude Code session started by GitHub Actions, acting as the Claude GitHub App   |
+| Automation   | Plain GitHub Actions workflows that update labels and branches, no AI                       |
+
+An interactive Claude Code session acts on behalf of the collaborator who
+started it, and counts as that collaborator.
 
 ## Trust
 
@@ -32,32 +35,32 @@ where an issue stands:
 
 | Label             | Meaning                                                             |
 | ----------------- | ------------------------------------------------------------------- |
-| `needs-triage`    | Filed by an agent and not yet reviewed by a collaborator            |
+| `needs-triage`    | Needs review by a collaborator before an agent may start it         |
 | `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it     |
 | `blocked`         | Work stopped on a question or a rejected PR, and needs triage again |
 
-An issue with no status label is either waiting for triage by a collaborator, or
-being worked on by an agent.
+Every new issue gets `needs-triage`, unless a collaborator opens it already
+fully planned and labels it `ready-for-agent` directly. An open issue with no
+status label is being worked on by an agent or has an open PR.
 
 ## Issue Lifecycle
 
 ```mermaid
 stateDiagram-v2
-    [*] --> NeedsTriage: Agent files issue
-    [*] --> Triage: Collaborator files issue
-    NeedsTriage --> Triage: Collaborator reviews it
-    Triage --> ReadyForAgent: Collaborator writes plan
-    Triage --> [*]: Collaborator closes as not planned
+    [*] --> NeedsTriage: Issue opened
+    [*] --> ReadyForAgent: Collaborator opens a fully planned issue
+    NeedsTriage --> ReadyForAgent: Collaborator writes plan
+    NeedsTriage --> [*]: Collaborator closes as not planned
     ReadyForAgent --> InProgress: Agent starts
     InProgress --> Blocked: Agent has a question
     InProgress --> InReview: Agent opens PR
     InReview --> InReview: Collaborator submits review, agent addresses it
     InReview --> Blocked: Collaborator closes PR without merging
     InReview --> [*]: Collaborator merges PR
-    Blocked --> Triage: Collaborator answers
+    Blocked --> ReadyForAgent: Collaborator updates plan
+    Blocked --> [*]: Collaborator closes as not planned
 
     NeedsTriage: needs-triage
-    Triage: Triage (no status label)
     ReadyForAgent: ready-for-agent
     InProgress: In progress (no status label)
     Blocked: blocked
@@ -66,11 +69,11 @@ stateDiagram-v2
 
 ### Triage
 
-A collaborator reviews the issue and writes or updates the plan in the issue
-body. The issue body is the authoritative plan: comments are for triage
-discussion and the record, and any decision that changes the plan is written
-into the body. When the plan is complete, a collaborator removes `needs-triage`
-or `blocked` and adds `ready-for-agent`.
+A collaborator reviews an issue labeled `needs-triage` or `blocked`, and writes
+or updates the plan in the issue body. The issue body is the authoritative plan:
+comments are for triage discussion and the record, and any decision that changes
+the plan is written into the body. When the plan is complete, a collaborator
+removes `needs-triage` or `blocked` and adds `ready-for-agent`.
 
 ### Implementation
 
@@ -111,13 +114,14 @@ When a collaborator merges the PR, its closing keyword closes the issue.
 
 ## Starting Agents
 
-Agents are started either by a collaborator in a Claude Code session, or by
-GitHub Actions:
+Agents are started by GitHub Actions:
 
 | Event                                                            | Agent task          |
 | ---------------------------------------------------------------- | ------------------- |
 | Collaborator adds `ready-for-agent` to an issue                  | Implement the issue |
 | Collaborator submits a review with comments or requested changes | Address the review  |
+
+A collaborator can do the same tasks in an interactive Claude Code session.
 
 Each run starts fresh. Everything a run needs to continue earlier work is on
 GitHub: the issue body and comments, the issue's branch, and the PR and its
