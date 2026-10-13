@@ -115,6 +115,10 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
+If a run started by GitHub Actions fails before it can comment, for example from
+a crash, timeout, or usage limit, automation comments instead with a link to the
+failed run.
+
 ## Trust
 
 Only collaborators give instructions: the body of an issue opened by a
