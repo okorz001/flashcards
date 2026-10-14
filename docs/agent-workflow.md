@@ -56,11 +56,10 @@ the rules that protect code:
 
 - The ruleset on `main` requires a PR with passing CI and an approving review
   from a collaborator, and forbids force pushes and deletion.
-- The ruleset on `issue-*/**` forbids force pushes and deletion. Only repository
-  admins and the [rejected pull request](#rejected-pull-requests) automation
-  bypass it. The Claude GitHub App never does, so agents cannot rewrite or
-  delete issue branches. An interactive session acts as its collaborator, so it
-  shares their bypass.
+- The ruleset on `issue-*/**` forbids force pushes and deletion. Only the
+  [rejected pull request](#rejected-pull-requests) automation bypasses it, so
+  agents cannot rewrite or delete issue branches. A collaborator who needs to do
+  so by hand disables the ruleset in the repository settings first.
 
 ## Labels
 
