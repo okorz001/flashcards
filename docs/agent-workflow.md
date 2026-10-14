@@ -115,9 +115,9 @@ complete, a collaborator removes `needs-triage` or `agent-blocked` and adds
 An agent implements an issue as follows:
 
 1. Remove `ready-for-agent`, so no other agent starts the same issue. If
-   removing the label fails for any reason, stop without changing anything else.
-   A missing label means another agent may have already started the issue.
-   Otherwise, add `with-agent`.
+   removing the label fails for any reason, comment that the run stopped, and
+   change nothing else. A missing label means another agent may have already
+   started the issue. Otherwise, add `with-agent`.
 2. Check that the issue was opened by a collaborator or an agent, as required by
    [trust](#trust). If not, comment that agents only work on issues opened by
    collaborators or agents, and stop.
@@ -149,7 +149,10 @@ on the PR, not only the review that started the run:
   in its closing comment.
 
 If a comment asks for something outside the issue's plan, the agent replies
-saying so and makes no change. Approvals start nothing.
+saying so and makes no change.
+
+Approvals start nothing, even if they include comments. A collaborator who wants
+an answer submits a review without approving.
 
 If the agent cannot address a thread, for example because the comment is
 ambiguous, comments conflict, or the fix breaks a check, it pushes no change for
