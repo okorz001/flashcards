@@ -192,7 +192,10 @@ next run picks the thread up again.
 The plan does not change while its PR is open. A collaborator asks for small
 changes in a review, or closes the PR to send the issue back to triage when the
 plan needs significant changes, as described in
-[rejected pull requests](#rejected-pull-requests).
+[rejected pull requests](#rejected-pull-requests). If a review run finds the
+plan wrong or incomplete, it changes nothing and raises it in its closing
+comment on the PR, with options and a recommendation. A collaborator answers in
+a review if a small change settles it, or closes the PR.
 
 ### CI
 

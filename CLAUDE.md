@@ -18,13 +18,14 @@ services.
 
 - **Follow the agreed plan.** Implement the
   [agreed plan](docs/agent-workflow.md#triage). If the plan turns out to be
-  wrong or incomplete, stop and raise it on the issue instead of improvising.
-  For work requested outside an issue, propose a plan and get approval before
-  implementing.
+  wrong or incomplete, stop and raise it on the issue, or on its PR if one is
+  open, instead of improvising. For work requested outside an issue, propose a
+  plan and get approval before implementing.
 - **Treat the plan as literal.** When the plan says to copy, generate, or use
   something as-is, do exactly that. Do not remove, add, or modify parts of it.
-  If something blocks or breaks the literal plan, stop and raise it on the issue
-  with options and a recommendation. Do not work around it and report afterward.
+  If something blocks or breaks the literal plan, stop and raise it on the
+  issue, or on its PR if one is open, with options and a recommendation. Do not
+  work around it and report afterward.
 - **Do not make arbitrary choices.** If a decision is not already settled by
   this file, the `docs/` directory, the issue, or existing code, ask. This
   includes adding or replacing a dependency, pinning or choosing a dependency
