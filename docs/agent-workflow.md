@@ -44,8 +44,7 @@ pushes and deletion.
 
 ## Labels
 
-Every issue is labeled as either `bug` or `enhancement`. Status labels show
-where an issue stands:
+Status labels show where an issue stands:
 
 | Label             | Meaning                                                           |
 | ----------------- | ----------------------------------------------------------------- |
