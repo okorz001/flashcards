@@ -162,8 +162,10 @@ on the PR, not only the review that started the run:
 If a comment asks for something outside the issue's plan, the agent replies
 saying so and makes no change.
 
-Approvals start nothing, even if they include comments. A collaborator who wants
-an answer submits a review without approving.
+Approvals start nothing, even if they include comments, so their comments are
+optional. A collaborator who wants an answer submits a review without approving.
+A run started later for another reason addresses approvals' threads and summary
+text like any other review.
 
 If the agent cannot address a thread, for example because the comment is
 ambiguous, comments conflict, or the fix breaks a check, it pushes no change for
