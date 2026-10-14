@@ -147,9 +147,10 @@ from an [issue branch](../CLAUDE.md#branches) in this repository whose issue is
 labeled `with-agent`, an agent addresses all unaddressed collaborator feedback
 on the PR, not only the review that started the run:
 
-- Every unresolved review thread. The agent pushes a fix, replies, and resolves
-  the thread. A collaborator who is not satisfied reopens the thread or replies
-  in it.
+- Every unresolved review thread started by a collaborator. Only collaborators'
+  replies within it count as instructions. The agent pushes a fix, replies, and
+  resolves the thread. A collaborator who is not satisfied reopens the thread or
+  replies in it.
 - The summary text of every collaborator review submitted after the agent's last
   closing comment on the PR, which cannot be resolved. The agent replies to it
   in its closing comment.
