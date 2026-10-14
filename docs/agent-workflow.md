@@ -60,6 +60,10 @@ the rules that protect code:
   [rejected pull request](#rejected-pull-requests) automation bypasses it, so
   agents cannot rewrite or delete issue branches. A collaborator who needs to do
   so by hand disables the ruleset in the repository settings first.
+- Agents act as the Claude GitHub App, and automation acts as GitHub Actions. An
+  agent job's own `GITHUB_TOKEN` is read-only and is not stored in its git
+  config, so an agent cannot act as automation. Only automation jobs get a
+  `GITHUB_TOKEN` that can write.
 
 ## Labels
 
