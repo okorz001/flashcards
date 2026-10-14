@@ -183,6 +183,10 @@ linked to the review:
 Last review: okorz001 at [2026-10-15T01:02:03Z](<review link>)
 ```
 
+A review run first checks that the issue still has `with-agent` and the PR is
+still open, because either can change while the run waits to start. If not, it
+comments that it stopped and changes nothing else.
+
 If a comment asks for something outside the issue's plan, the agent replies
 saying so and makes no change.
 
@@ -256,8 +260,8 @@ number, which review runs take from the PR's issue branch. A new run waits for
 the current one to finish and never cancels it. GitHub keeps only one waiting
 run per group and cancels older waiting runs, which loses nothing because the
 next review run addresses all unaddressed feedback. A collaborator never changes
-status labels or the branch during an active run. To take over, they wait for
-the run to finish, or cancel it in GitHub Actions and then remove the
+status labels, the branch, or the PR during an active run. To take over, they
+wait for the run to finish, or cancel it in GitHub Actions and then remove the
 `agent-failed` label it leaves.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
