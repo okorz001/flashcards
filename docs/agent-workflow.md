@@ -231,18 +231,18 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
-If a run fails before it can comment, for example from a crash, timeout, usage
-limit, or lost runner, automation replaces the issue's status labels with
-`agent-failed` and comments with a link to the failed run. This automation is a
-separate workflow that runs when an agent workflow finishes, and finds the issue
-from the run's title, such as "Implement #12". It acts on runs that failed, and
-on cancelled runs only if a job timed out, because GitHub reports timeouts as
-cancelled. Other cancelled runs are ignored: GitHub cancels queued runs that it
-drops before they start, and a collaborator who cancels a run by hand fixes the
-labels themselves. A collaborator retries by re-adding `ready-for-agent` if the
-issue has no PR, or by re-adding `with-agent` and submitting the review again if
-it does. GitHub's re-run button does not work for issues, because the run's
-label is already gone. A new run removes `agent-failed` when it starts.
+If a run fails or is cancelled before it can comment, for example from a crash,
+timeout, or usage limit, automation replaces the issue's status labels with
+`agent-failed` and comments with a link to the run. This automation is the last
+step of the run's own job, so it finishes before the issue's next queued run can
+start, and runs only when an earlier step failed or was cancelled, so a
+successful run never touches it. The agent step has its own time limit, shorter
+than the job's, so a timeout still leaves time for this step. Queued runs that
+GitHub drops never start their job, so they never trigger it. A collaborator
+retries by re-adding `ready-for-agent` if the issue has no PR, or by re-adding
+`with-agent` and submitting the review again if it does. GitHub's re-run button
+does not work for issues, because the run's label is already gone. A new run
+removes `agent-failed` when it starts.
 
 ## Accepted Tradeoffs
 
@@ -256,3 +256,5 @@ label is already gone. A new run removes `agent-failed` when it starts.
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
+- A run whose runner machine is lost cannot report its own failure, so its
+  status labels stay behind until a collaborator notices. This is rare.
