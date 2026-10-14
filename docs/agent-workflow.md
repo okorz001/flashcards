@@ -38,9 +38,10 @@ and removing labels, pushing branches, opening PRs, and replying to reviews.
 They get no tool that edits an existing issue, and no shell access to `gh` or
 `curl`, so the instructions above are enforced rather than trusted.
 
-Agents never merge PRs, close issues, or delete remote branches. Branch
-protection on `main` requires changes to go through a PR and forbids force
-pushes and deletion.
+Agents never merge PRs, close issues, or delete remote branches. The ruleset on
+`main` enforces this: changes reach `main` only through a PR with passing CI and
+an approving review from a collaborator, and force pushes and deletion are
+forbidden.
 
 ## Labels
 
