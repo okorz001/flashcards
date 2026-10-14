@@ -35,8 +35,17 @@ Actions only starts an implementation run when a human collaborator adds
 interactive session, Claude adds `ready-for-agent` only when the collaborator
 explicitly asks.
 
-Agents only get the GitHub tools they need: commenting, filing issues, adding
-and removing labels, pushing branches, opening PRs, and replying to reviews.
+Agents only get the GitHub tools they need:
+
+- Reading issues, PRs, reviews, and review threads
+- Reading CI status and logs
+- Commenting on issues and PRs
+- Filing issues
+- Adding and removing labels
+- Pushing branches
+- Opening PRs
+- Replying to and resolving review threads
+
 They get no tool that edits an existing issue, and no shell access to `gh` or
 `curl`, so the instructions above are enforced rather than trusted.
 
