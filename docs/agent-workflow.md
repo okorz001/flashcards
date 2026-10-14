@@ -170,9 +170,12 @@ on the PR, not only the review that started the run:
   replies within it count as instructions. The agent pushes a fix, replies, and
   resolves the thread. A collaborator who is not satisfied reopens the thread or
   replies in it.
-- The summary text of every collaborator review submitted after the agent's last
-  closing comment on the PR, which cannot be resolved. The agent replies to it
-  in its closing comment.
+- The summary text of every collaborator review submitted after the newest
+  review covered by an earlier run, or of every collaborator review if there is
+  none. Summaries cannot be resolved, so the agent replies to them in its
+  closing comment on the PR. That comment's first line is
+  `Addressed reviews through <link>`, linking to the newest review the run read,
+  so the next run can find where to continue.
 
 If a comment asks for something outside the issue's plan, the agent replies
 saying so and makes no change.
