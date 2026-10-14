@@ -114,11 +114,11 @@ complete, a collaborator removes `needs-triage` or `agent-blocked` and adds
 
 An agent implements an issue as follows:
 
-1. Remove `ready-for-agent`, so no other agent starts the same issue. If
-   removing the label fails for any reason, comment that the run stopped, and
-   change nothing else. A missing label means another agent may have already
-   started the issue. Otherwise, add `with-agent` right away, so a run that
-   crashes from here on is visible.
+1. If the issue no longer has `ready-for-agent`, because a collaborator removed
+   it to cancel the run or an earlier run already started the issue, comment
+   that the run stopped and change nothing else. Otherwise add `with-agent`,
+   then remove `ready-for-agent`, so the issue always has a status label and a
+   run that crashes from here on is visible.
 2. Check that the issue was opened by a collaborator or an agent, as required by
    [trust](#trust). If not, comment that agents only work on issues opened by
    collaborators or agents, remove `with-agent`, and stop.
@@ -231,12 +231,17 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
-If a run fails or is cancelled before it can comment, for example from a crash,
-timeout, or usage limit, automation replaces `with-agent` with `agent-failed` on
-the issue and comments with a link to the failed run. A collaborator retries by
-re-adding `ready-for-agent` if the issue has no PR, or by re-adding `with-agent`
-and submitting the review again if it does. GitHub's re-run button does not work
-for issues, because the run's label is already gone. A new run removes
+If a run fails before it can comment, for example from a crash, timeout, or
+usage limit, automation replaces the issue's status labels with `agent-failed`
+and comments with a link to the failed run. This runs as a final step of the
+same job, only when an earlier step failed, so a successful run never touches
+it. The agent step has its own time limit, shorter than the job's, so a timeout
+still leaves time for this step. Cancelled runs are ignored: GitHub cancels
+queued runs that it drops before they start, and a collaborator who cancels a
+run by hand fixes the labels themselves. A collaborator retries by re-adding
+`ready-for-agent` if the issue has no PR, or by re-adding `with-agent` and
+submitting the review again if it does. GitHub's re-run button does not work for
+issues, because the run's label is already gone. A new run removes
 `agent-failed` when it starts.
 
 ## Accepted Tradeoffs
@@ -251,3 +256,5 @@ for issues, because the run's label is already gone. A new run removes
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
+- A run whose runner machine is lost cannot report its own failure, so its
+  status labels stay behind until a collaborator notices.
