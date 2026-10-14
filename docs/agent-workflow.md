@@ -47,12 +47,20 @@ Agents only get the GitHub tools they need:
 - Replying to and resolving review threads
 
 They get no tool that edits an existing issue, and no shell access to `gh` or
-`curl`, so the instructions above are enforced rather than trusted.
+`curl`. These limits are defense in depth, not enforcement: an agent still runs
+commands such as `npm` and `git`, so a hijacked or mistaken agent could call the
+GitHub API with its token directly.
 
-Agents never merge PRs, close issues, or delete remote branches. The ruleset on
-`main` enforces this: changes reach `main` only through a PR with passing CI and
-an approving review from a collaborator, and force pushes and deletion are
-forbidden.
+Agents never merge PRs, close issues, or delete remote branches. GitHub enforces
+the rules that protect code:
+
+- The ruleset on `main` requires a PR with passing CI and an approving review
+  from a collaborator, and forbids force pushes and deletion.
+- The ruleset on `issue-*/**` forbids force pushes and deletion. Only repository
+  admins and the [rejected pull request](#rejected-pull-requests) automation
+  bypass it. The Claude GitHub App never does, so agents cannot rewrite or
+  delete issue branches. An interactive session acts as its collaborator, so it
+  shares their bypass.
 
 ## Labels
 
@@ -296,3 +304,6 @@ button does not work for issues, because the run's label is already gone.
   with it as a separate issue.
 - A run whose runner machine is lost cannot report its own failure, so its
   status labels stay behind until a collaborator notices. This is rare.
+- A hijacked or mistaken agent could still edit or close issues and PRs, or push
+  unwanted commits to an issue branch, through the GitHub API. All of these are
+  visible and recoverable from history, and none can change `main`.
