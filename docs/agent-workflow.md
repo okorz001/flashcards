@@ -63,9 +63,10 @@ collaborator or an agent gets `external-report`. Any other issue gets
 `needs-triage`, unless a collaborator opens it already fully planned and labels
 it `ready-for-agent` directly.
 
-A collaborator takes an issue and its PR over from agents by removing
-`with-agent`, and hands them back by adding it. An open issue with no status
-label is owned by a collaborator.
+An open issue with no status label is owned by a collaborator. A collaborator
+takes an issue over from agents by removing its status label. They hand it back
+by adding `with-agent` followed by a new review if it has an open PR, or
+`ready-for-agent` if it does not.
 
 ## Issue Lifecycle
 
@@ -83,8 +84,13 @@ stateDiagram-v2
     InReview --> InReview: Collaborator submits review, agent addresses it
     InReview --> NeedsTriage: Collaborator closes PR without merging
     InReview --> [*]: Collaborator merges PR
+    NeedsTriage --> Collaborator: Collaborator takes over
+    ReadyForAgent --> Collaborator: Collaborator takes over
+    Blocked --> Collaborator: Collaborator takes over
+    Failed --> Collaborator: Collaborator takes over
     InReview --> Collaborator: Collaborator takes over
-    Collaborator --> InReview: Collaborator hands back
+    Collaborator --> InReview: Collaborator hands back with a PR
+    Collaborator --> ReadyForAgent: Collaborator hands back without a PR
     Collaborator --> [*]: Collaborator merges PR
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
