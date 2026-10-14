@@ -234,8 +234,10 @@ the same issue share one GitHub Actions concurrency group, keyed by the issue
 number, which review runs take from the PR's issue branch. A new run waits for
 the current one to finish and never cancels it. GitHub keeps only one waiting
 run per group and cancels older waiting runs, which loses nothing because the
-next review run addresses all unaddressed feedback. A collaborator waits for any
-active run to finish before working on the branch themselves.
+next review run addresses all unaddressed feedback. A collaborator never changes
+status labels or the branch during an active run. To take over, they wait for
+the run to finish, or cancel it in GitHub Actions and then remove the
+`agent-failed` label it leaves.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
 finished or stopped early, so those threads are a complete log of agent
