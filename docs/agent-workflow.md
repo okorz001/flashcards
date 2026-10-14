@@ -239,10 +239,9 @@ start, and runs only when an earlier step failed or was cancelled, so a
 successful run never touches it. The agent step has its own time limit, shorter
 than the job's, so a timeout still leaves time for this step. Queued runs that
 GitHub drops never start their job, so they never trigger it. A collaborator
-retries by re-adding `ready-for-agent` if the issue has no PR, or by re-adding
-`with-agent` and submitting the review again if it does. GitHub's re-run button
-does not work for issues, because the run's label is already gone. A new run
-removes `agent-failed` when it starts.
+retries by replacing `agent-failed` with `ready-for-agent` if the issue has no
+PR, or with `with-agent` followed by a new review if it does. GitHub's re-run
+button does not work for issues, because the run's label is already gone.
 
 ## Accepted Tradeoffs
 
