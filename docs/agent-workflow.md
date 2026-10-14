@@ -236,3 +236,8 @@ for issues, because the run's label is already gone. A new run removes
   an issue anyway.
 - Agents ignore PR conversation comments, which are not part of a review and
   cannot be resolved. Requests for an agent go in a review.
+- Nothing detects a merge conflict that appears after a run ends, for example
+  when another PR merges. A collaborator raises it in a review, and the next run
+  resolves it.
+- Nothing reacts automatically when CI breaks on `main`. A collaborator deals
+  with it as a separate issue.
