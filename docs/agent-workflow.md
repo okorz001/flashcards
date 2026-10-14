@@ -117,22 +117,28 @@ An agent implements an issue as follows:
 1. Remove `ready-for-agent`, so no other agent starts the same issue. If
    removing the label fails for any reason, comment that the run stopped, and
    change nothing else. A missing label means another agent may have already
-   started the issue. Otherwise, add `with-agent`.
+   started the issue.
 2. Check that the issue was opened by a collaborator or an agent, as required by
    [trust](#trust). If not, comment that agents only work on issues opened by
    collaborators or agents, and stop.
 3. Check that the issue is open and has no open PR. If not, comment saying so,
    and stop.
-4. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
+4. Add `with-agent`.
+5. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
    work from a blocked run. Otherwise, create a new branch from `main`.
-5. Implement the plan in the issue body.
-6. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
+6. Implement the plan in the issue body.
+7. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
    comment on the issue with what is done, what is not, the question with
    options and a recommendation, and the branch name, then replace `with-agent`
    with `agent-blocked`.
-7. When complete and all checks pass, check again that the issue is still open.
+8. When complete and all checks pass, check again that the issue is still open.
    If it is, open a PR that closes the issue and any external report it links
-   to. If not, push the work and comment instead.
+   to. If not, push the work, comment, and remove `with-agent`.
+
+A run only leaves `with-agent` on an issue that has an open PR. Every other way
+a run stops replaces or removes it, and only a run that ends abruptly can leave
+it behind, which [automation](#starting-agents) then replaces with
+`agent-failed`.
 
 ### Review
 
