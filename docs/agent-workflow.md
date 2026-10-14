@@ -29,9 +29,10 @@ instructions.
 Only collaborators approve work. Agents never add `ready-for-agent`, edit an
 issue body, or remove `needs-triage` or `external-report`. Agents change status
 labels only as the [implementation](#implementation) steps describe. GitHub
-Actions only starts a run when a human collaborator adds `ready-for-agent`, and
-the Claude bot is never listed in `allowed_bots`. In an interactive session,
-Claude adds `ready-for-agent` only when the collaborator explicitly asks.
+Actions only starts an implementation run when a human collaborator adds
+`ready-for-agent`, and the Claude bot is never listed in `allowed_bots`. In an
+interactive session, Claude adds `ready-for-agent` only when the collaborator
+explicitly asks.
 
 Agents only get the GitHub tools they need: commenting, filing issues, adding
 and removing labels, pushing branches, opening PRs, and replying to reviews.
