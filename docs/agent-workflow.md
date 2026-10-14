@@ -117,21 +117,21 @@ An agent implements an issue as follows:
 1. Remove `ready-for-agent`, so no other agent starts the same issue. If
    removing the label fails for any reason, comment that the run stopped, and
    change nothing else. A missing label means another agent may have already
-   started the issue.
+   started the issue. Otherwise, add `with-agent` right away, so a run that
+   crashes from here on is visible.
 2. Check that the issue was opened by a collaborator or an agent, as required by
    [trust](#trust). If not, comment that agents only work on issues opened by
-   collaborators or agents, and stop.
+   collaborators or agents, remove `with-agent`, and stop.
 3. Check that the issue is open and has no open PR. If not, comment saying so,
-   and stop.
-4. Add `with-agent`.
-5. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
+   remove `with-agent`, and stop.
+4. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
    work from a blocked run. Otherwise, create a new branch from `main`.
-6. Implement the plan in the issue body.
-7. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
+5. Implement the plan in the issue body.
+6. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
    comment on the issue with what is done, what is not, the question with
    options and a recommendation, and the branch name, then replace `with-agent`
    with `agent-blocked`.
-8. When complete and all checks pass, check again that the issue is still open.
+7. When complete and all checks pass, check again that the issue is still open.
    If it is, open a PR that closes the issue and any external report it links
    to. If not, push the work, comment, and remove `with-agent`.
 
