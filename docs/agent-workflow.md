@@ -57,8 +57,8 @@ They get no tool that edits an existing issue, and no shell access to `gh` or
 commands such as `npm` and `git`, so a hijacked or mistaken agent could call the
 GitHub API with its token directly.
 
-Agents never merge PRs, close issues, or delete remote branches. GitHub enforces
-the rules that protect code:
+Agents never merge PRs, close issues, force push, or delete remote branches.
+GitHub enforces the rules that protect code:
 
 - The ruleset on `main` requires a PR with passing CI and an approving review
   from a collaborator, and forbids force pushes and deletion. The Claude GitHub
