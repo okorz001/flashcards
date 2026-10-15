@@ -174,8 +174,8 @@ An agent implements an issue as follows:
    to. If not, push the work, comment, and remove `with-agent`.
 
 A run only leaves `with-agent` on an issue that has an open PR. Every other way
-a run stops replaces or removes it, and only a run that ends abruptly can leave
-it behind, which [automation](#starting-agents) then replaces with
+a run stops replaces or removes it. Only a run that ends abruptly can leave it
+behind, and then [failure handling](#starting-agents) marks the issue
 `agent-failed`.
 
 ### Review
@@ -295,18 +295,18 @@ activity. The comment states the outcome and why: a link to the opened PR, a
 summary of the review fixes pushed, the question that blocked it, or the reason
 it stopped.
 
-If a run fails or is cancelled before it can comment, for example from a crash,
-timeout, or usage limit, automation replaces the issue's status labels with
-`agent-failed` and comments with a link to the run. This automation is a
-separate job in the agent's workflow, after the agent job, so it finishes before
-the issue's next queued run can start. It runs only when the agent job failed or
-was cancelled, including when it timed out or lost its runner, and never when
-the agent job succeeded or was skipped. It runs as automation, not as the agent,
-on its own runner. Queued runs that GitHub drops never start, so they never
-trigger it. A collaborator retries by replacing `agent-failed` with
-`ready-for-agent` if the issue has no PR, or with `with-agent` followed by a new
-review if it does. GitHub's re-run button does not work for issues, because the
-run's label is already gone.
+If the agent job fails or is cancelled, for example from a crash, timeout, or
+usage limit, automation replaces the issue's status labels with `agent-failed`
+and comments with a link to the run. This automation is a separate job in the
+agent's workflow, after the agent job, so it finishes before the issue's next
+queued run can start. It runs only when the agent job failed or was cancelled,
+including when it timed out or lost its runner, and never when the agent job
+succeeded or was skipped. It runs as automation, not as the agent, on its own
+runner. Queued runs that GitHub drops never start, so they never trigger it. A
+collaborator retries by replacing `agent-failed` with `ready-for-agent` if the
+issue has no PR, or with `with-agent` followed by a new review if it does.
+GitHub's re-run button does not work for issues, because the run's label is
+already gone.
 
 ## Accepted Tradeoffs
 
