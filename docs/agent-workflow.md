@@ -163,7 +163,7 @@ An agent implements an issue as follows:
 3. Check that the issue is open and has no open PR. If not, comment saying so,
    remove `with-agent`, and stop.
 4. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
-   work from a blocked run. If more than one exists, comment listing them and
+   earlier work on the issue. If more than one exists, comment listing them and
    asking which to continue, replace `with-agent` with `agent-blocked`, and
    stop. Otherwise, create a new branch from `main`.
 5. Implement the plan in the issue body.
