@@ -121,6 +121,8 @@ stateDiagram-v2
     Collaborator --> InReview: Collaborator hands back with a PR
     Collaborator --> ReadyForAgent: Collaborator hands back without a PR
     Collaborator --> [*]: Collaborator merges PR
+    Collaborator --> [*]: Collaborator closes issue
+    Collaborator --> NeedsTriage: Collaborator closes PR without merging
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
     InProgress --> Collaborator: Agent stops early
@@ -259,7 +261,7 @@ tried, the question, options, and a recommendation, and stops. The issue keeps
 
 A collaborator rejects a PR by closing it without merging. If the PR comes from
 an [issue branch](../CLAUDE.md#branches) in this repository and its issue is
-open and labeled `with-agent`, automation then replaces `with-agent` with
+open, automation then replaces the issue's status labels, if any, with
 `needs-triage`, comments on the issue with a link to the closed PR, and deletes
 the PR's branch, so the next agent starts from `main`. The closed PR keeps its
 commits and discussion for triage. Other closed PRs are left alone.
