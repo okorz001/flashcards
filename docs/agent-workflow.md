@@ -212,8 +212,11 @@ A review run first checks that the issue still has `with-agent` and the PR is
 still open, because either can change while the run waits to start. If not, it
 comments that it stopped and changes nothing else.
 
-If a comment asks for something outside the issue's plan, the agent replies
-saying so and makes no change.
+The agent follows review instructions that fit the issue's plan, such as fixes,
+refinements, and implementation details. If an instruction changes the plan's
+scope or contradicts a decision the plan records, the agent replies saying so
+and makes no change for it. A reviewer who wants that changes the plan instead,
+as described below.
 
 Approvals start nothing, even if they include comments, so their comments are
 optional. A collaborator who wants an answer submits a review without approving.
@@ -227,13 +230,13 @@ the thread unresolved, and lists it in its closing comment. The issue keeps
 `with-agent`. A collaborator answers in the thread and submits a review, and the
 next run picks the thread up again.
 
-The plan does not change while its PR is open. A collaborator asks for small
-changes in a review, or closes the PR to send the issue back to triage when the
-plan needs significant changes, as described in
+The plan does not change while its PR is open. A collaborator who wants to
+change it closes the PR, which sends the issue back to triage, as described in
 [rejected pull requests](#rejected-pull-requests). If a review run finds the
 plan wrong or incomplete, it changes nothing and raises it in its closing
 comment on the PR, with options and a recommendation. A collaborator answers in
-a review if a small change settles it, or closes the PR.
+a review if an instruction that fits the plan settles it, or closes the PR to
+change the plan.
 
 ### CI
 
