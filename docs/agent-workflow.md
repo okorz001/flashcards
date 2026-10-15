@@ -191,18 +191,22 @@ on the PR, not only the review that started the run:
   replies within it count as instructions. The agent pushes a fix, replies, and
   resolves the thread. A collaborator who is not satisfied reopens the thread or
   replies in it.
-- The summary text of every collaborator review submitted after the cutoff
-  recorded by the last review run, or of every collaborator review if no run
-  recorded one. Summaries cannot be resolved, so the agent replies to them in
-  its closing comment on the PR.
+- The summary text of every collaborator review submitted after the most recent
+  cutoff posted by the Claude GitHub App, or of every collaborator review if
+  there is none. Cutoffs in anyone else's comments are ignored. Summaries cannot
+  be resolved, so the agent replies to them in its closing comment on the PR.
 
-The closing comment of a review run starts with a line recording its cutoff, the
-newest review the run read, without an `@` mention and with the time in UTC
-linked to the review:
+When a review run has responded to the reviews, by addressing them or by
+stopping on a question, its closing comment starts with a line recording its
+cutoff. The cutoff is the newest review the run read, written without an `@`
+mention and with the time in UTC linked to the review:
 
 ```text
 Last review: okorz001 at [2026-10-15T01:02:03Z](<review link>)
 ```
+
+A run that stops before responding, at its start-up check or by failing, records
+no cutoff, so the previous one stays in effect.
 
 A review run first checks that the issue still has `with-agent` and the PR is
 still open, because either can change while the run waits to start. If not, it
