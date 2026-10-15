@@ -64,10 +64,10 @@ the rules that protect code:
 - The ruleset on `main` requires a PR with passing CI and an approving review
   from a collaborator, and forbids force pushes and deletion. The Claude GitHub
   App never bypasses it, so agents cannot merge.
-- The ruleset on `issue-*/**` forbids force pushes and deletion. Only the
-  [rejected pull request](#rejected-pull-requests) automation bypasses it, so
-  agents cannot rewrite or delete issue branches. A collaborator who needs to do
-  so by hand disables the ruleset in the repository settings first.
+- The ruleset on `issue-*/**` forbids force pushes and deletion. Only repository
+  admins, who manage the repository by hand when needed, and the
+  [rejected pull request](#rejected-pull-requests) automation bypass it, so
+  agents cannot rewrite or delete issue branches.
 - Agents act as the Claude GitHub App, and automation acts as GitHub Actions. An
   agent job's own `GITHUB_TOKEN` is read-only and is not stored in its git
   config, so an agent cannot act as automation. Only automation jobs get a
@@ -265,7 +265,7 @@ commits and discussion for triage. Other closed PRs are left alone.
 ### Merge
 
 When a collaborator merges the PR, its closing keywords close the issue and any
-external report it links to.
+external report it links to, and GitHub deletes the PR's branch automatically.
 
 ## Starting Agents
 
