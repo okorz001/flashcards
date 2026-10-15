@@ -267,13 +267,14 @@ reviews.
 
 At most one run works on an issue at a time. Implementation and review runs for
 the same issue share one GitHub Actions concurrency group, keyed by the issue
-number, which review runs take from the PR's issue branch. A new run waits for
-the current one to finish and never cancels it. GitHub keeps only one waiting
-run per group and cancels older waiting runs, which loses nothing because the
-next review run addresses all unaddressed feedback. A collaborator never changes
-status labels, the branch, or the PR during an active run. To take over, they
-wait for the run to finish, or cancel it in GitHub Actions and then remove the
-`agent-failed` label it leaves.
+number, which review runs take from the PR's issue branch. The group is set on
+the whole workflow, never on a single job, so a run holds it until all of its
+jobs finish. A new run waits for the current one to finish and never cancels it.
+GitHub keeps only one waiting run per group and cancels older waiting runs,
+which loses nothing because the next review run addresses all unaddressed
+feedback. A collaborator never changes status labels, the branch, or the PR
+during an active run. To take over, they wait for the run to finish, or cancel
+it in GitHub Actions and then remove the `agent-failed` label it leaves.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
 finished or stopped early, so those threads are a complete log of agent
@@ -283,15 +284,16 @@ it stopped.
 
 If a run fails or is cancelled before it can comment, for example from a crash,
 timeout, or usage limit, automation replaces the issue's status labels with
-`agent-failed` and comments with a link to the run. This automation is the last
-step of the run's own job, so it finishes before the issue's next queued run can
-start, and runs only when an earlier step failed or was cancelled, so a
-successful run never touches it. The agent step has its own time limit, shorter
-than the job's, so a timeout still leaves time for this step. Queued runs that
-GitHub drops never start their job, so they never trigger it. A collaborator
-retries by replacing `agent-failed` with `ready-for-agent` if the issue has no
-PR, or with `with-agent` followed by a new review if it does. GitHub's re-run
-button does not work for issues, because the run's label is already gone.
+`agent-failed` and comments with a link to the run. This automation is a
+separate job in the same workflow run, after the agent job, so it holds the
+issue's concurrency group and finishes before the issue's next queued run can
+start. It runs whenever the agent job did not succeed, including when it failed,
+was cancelled, timed out, or lost its runner, and never after a successful run.
+It runs as automation, not as the agent, on its own runner. Queued runs that
+GitHub drops never start, so they never trigger it. A collaborator retries by
+replacing `agent-failed` with `ready-for-agent` if the issue has no PR, or with
+`with-agent` followed by a new review if it does. GitHub's re-run button does
+not work for issues, because the run's label is already gone.
 
 ## Accepted Tradeoffs
 
@@ -305,8 +307,6 @@ button does not work for issues, because the run's label is already gone.
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
-- A run whose runner machine is lost cannot report its own failure, so its
-  status labels stay behind until a collaborator notices. This is rare.
 - A hijacked or mistaken agent could still edit or close issues and PRs, or push
   unwanted commits to an issue branch, through the GitHub API. All of these are
   visible and recoverable from history, and none can change `main`.
