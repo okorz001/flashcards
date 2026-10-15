@@ -229,13 +229,15 @@ the thread unresolved, and lists it in its closing comment. The issue keeps
 `with-agent`. A collaborator answers in the thread and submits a review, and the
 next run picks the thread up again.
 
-The plan does not change while its PR is open. A collaborator who wants to
-change it closes the PR, which sends the issue back to triage, as described in
+While an issue has `with-agent`, its plan does not change. To change the plan
+while a PR is open, a collaborator [takes the issue over](#labels), edits the
+plan, and hands it back with a new review. If the change is significant enough
+to discard the current work, they close the PR instead, as described in
 [rejected pull requests](#rejected-pull-requests). If a review run finds the
 plan wrong or incomplete, it changes nothing and raises it in its closing
 comment on the PR, with options and a recommendation. A collaborator answers in
-a review if an instruction that fits the plan settles it, or closes the PR to
-change the plan.
+a review if an instruction that fits the plan settles it, or changes the plan as
+above.
 
 ### CI
 
