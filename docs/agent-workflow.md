@@ -315,10 +315,22 @@ not work for issues, because the run's label is already gone.
   failure handler. This is rare, because it needs another run for the same issue
   to be active and a third to queue. A collaborator restarts it by removing and
   adding `ready-for-agent` again.
-- Every PR should be approved by a collaborator other than its author, but this
-  repository has only one collaborator, who cannot approve their own PRs. Until
-  there is a second collaborator, repository admins bypass the `main` ruleset to
-  merge their own PRs without a review.
+- Repository admins bypass the `main` ruleset to merge their own PRs without a
+  review, because GitHub does not let anyone approve their own PR and there is
+  only one collaborator. An interactive session acting as an admin can use this
+  bypass too, so [future work](#future-work) removes it.
 - A hijacked or mistaken agent could still edit or close issues and PRs, or push
   unwanted commits to an issue branch, through the GitHub API. All of these are
   visible and recoverable from history, and none can change `main`.
+
+## Future Work
+
+- Remove the admin bypass on `main`. Every PR then needs an approving review
+  from an identity other than its author, so no single Claude session can merge
+  on its own. One option is for agents to review and approve collaborators' PRs,
+  as long as a human is accountable on at least one side of every PR: a
+  collaborator wrote it, or a collaborator approved it. A collaborator is
+  accountable for anything an interactive session writes on their behalf. Agents
+  never approve agents' PRs, which GitHub enforces because an author cannot
+  approve their own PR. It is not yet known whether an approval from the Claude
+  GitHub App satisfies the ruleset.
