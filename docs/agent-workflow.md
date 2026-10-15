@@ -270,11 +270,13 @@ the same issue share one GitHub Actions concurrency group, keyed by the issue
 number, which review runs take from the PR's issue branch. The group is set on
 the whole workflow, never on a single job, so a run holds it until all of its
 jobs finish. A new run waits for the current one to finish and never cancels it.
-GitHub keeps only one waiting run per group and cancels older waiting runs,
-which loses nothing because the next review run addresses all unaddressed
-feedback. A collaborator never changes status labels, the branch, or the PR
-during an active run. To take over, they wait for the run to finish, or cancel
-it in GitHub Actions and then remove the `agent-failed` label it leaves.
+GitHub keeps only one waiting run per group and cancels older waiting runs. A
+dropped review run loses nothing, because the next review run addresses all
+unaddressed feedback, but a dropped implementation run is an
+[accepted tradeoff](#accepted-tradeoffs). A collaborator never changes status
+labels, the branch, or the PR during an active run. To take over, they wait for
+the run to finish, or cancel it in GitHub Actions and then remove the
+`agent-failed` label it leaves.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
 finished or stopped early, so those threads are a complete log of agent
@@ -307,6 +309,11 @@ not work for issues, because the run's label is already gone.
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
+- A waiting implementation run that GitHub drops for a newer run leaves its
+  issue on `ready-for-agent` with nothing running, and never triggers the
+  failure handler. This is rare, because it needs another run for the same issue
+  to be active and a third to queue. A collaborator restarts it by removing and
+  adding `ready-for-agent` again.
 - A hijacked or mistaken agent could still edit or close issues and PRs, or push
   unwanted commits to an issue branch, through the GitHub API. All of these are
   visible and recoverable from history, and none can change `main`.
