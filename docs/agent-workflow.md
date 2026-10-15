@@ -92,9 +92,11 @@ collaborator or an agent gets `external-report`. Any other issue gets
 it `ready-for-agent` directly.
 
 An open issue with no status label is owned by a collaborator. A collaborator
-takes an issue over from agents by removing its status label. They hand it back
-by adding `with-agent` followed by a new review if it has an open PR, or
-`ready-for-agent` if it does not.
+takes an issue over from agents by removing its status label, as described in
+[starting agents](#starting-agents). They hand it back by adding `with-agent`
+followed by a new review if it has an open PR, or `ready-for-agent` if it does
+not. Every label swap adds the new label before removing the old one, so an
+issue never loses its status label partway through a swap.
 
 ## Issue Lifecycle
 
@@ -284,10 +286,13 @@ cannot replace a waiting run. A new run waits for the current one to finish and
 never cancels it. GitHub keeps only one waiting run per group and cancels older
 waiting runs. A dropped review run loses nothing, because the next review run
 addresses all unaddressed feedback, but a dropped implementation run is an
-[accepted tradeoff](#accepted-tradeoffs). A collaborator never changes status
-labels, the branch, or the PR during an active run. To take over, they wait for
-the run to finish, or cancel it in GitHub Actions and then remove the
-`agent-failed` label it leaves.
+[accepted tradeoff](#accepted-tradeoffs).
+
+To stop agents working on an issue, a collaborator first removes its status
+labels, so any queued run stops as soon as it starts. Then they cancel any run
+in progress in GitHub Actions, and remove the `agent-failed` label that failure
+handling adds when it finishes. They change the branch or the PR only after
+that.
 
 Every run ends with a comment on the issue or PR it worked on, whether it
 finished or stopped early, so those threads are a complete log of agent
