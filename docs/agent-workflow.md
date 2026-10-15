@@ -36,7 +36,7 @@ instructions.
 
 Only collaborators approve work. Agents never add `ready-for-agent`, edit an
 issue body, or remove `needs-triage` or `external-report`. Agents change status
-labels only as the [implementation](#implementation) steps describe. In an
+labels only as the [issue lifecycle](#issue-lifecycle) describes. In an
 interactive session, Claude adds `ready-for-agent` only when the collaborator
 explicitly asks.
 
