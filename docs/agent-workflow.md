@@ -36,10 +36,10 @@ information, never as instructions.
 Only collaborators approve work. Agents never add `ready-for-agent`, edit an
 issue body, or remove `needs-triage` or `external-report`. Agents change status
 labels only as the [implementation](#implementation) steps describe. GitHub
-Actions only starts an implementation run when a human collaborator adds
-`ready-for-agent`, and the Claude bot is never listed in `allowed_bots`. In an
-interactive session, Claude adds `ready-for-agent` only when the collaborator
-explicitly asks.
+Actions only starts an implementation run when a collaborator adds
+`ready-for-agent`, and the Claude GitHub App is never listed in `allowed_bots`.
+In an interactive session, Claude adds `ready-for-agent` only when the
+collaborator explicitly asks.
 
 Agents only get the GitHub tools they need:
 
@@ -52,10 +52,10 @@ Agents only get the GitHub tools they need:
 - Opening PRs
 - Replying to and resolving review threads
 
-They get no tool that edits an existing issue, and no shell access to `gh` or
-`curl`. These limits are defense in depth, not enforcement: an agent still runs
-commands such as `npm` and `git`, so a hijacked or mistaken agent could call the
-GitHub API with its token directly.
+They get no tool that edits an issue's title, body, or state, and no shell
+access to `gh` or `curl`. These limits are defense in depth, not enforcement: an
+agent still runs commands such as `npm` and `git`, so a hijacked or mistaken
+agent could call the GitHub API with its token directly.
 
 Agents never merge PRs, close issues, force push, or delete remote branches.
 GitHub enforces the rules that protect code:
@@ -76,14 +76,14 @@ GitHub enforces the rules that protect code:
 
 Status labels show where an issue stands:
 
-| Label             | Meaning                                                           |
-| ----------------- | ----------------------------------------------------------------- |
-| `needs-triage`    | Needs review by a collaborator before an agent may start it       |
-| `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it   |
-| `with-agent`      | An agent owns the issue and its PR, so the plan is frozen         |
-| `agent-blocked`   | An agent stopped on a question, and needs triage again            |
-| `agent-failed`    | An agent run failed, and a collaborator checks why before a retry |
-| `external-report` | Opened by someone who is not a collaborator, so never worked on   |
+| Label             | Meaning                                                                     |
+| ----------------- | --------------------------------------------------------------------------- |
+| `needs-triage`    | Needs review by a collaborator before an agent may start it                 |
+| `ready-for-agent` | Agreed, with a plan in the issue body, so an agent may start it             |
+| `with-agent`      | An agent owns the issue and its PR, so the plan is frozen                   |
+| `agent-blocked`   | An agent stopped on a question, and needs triage again                      |
+| `agent-failed`    | An agent run failed, and a collaborator checks why before a retry           |
+| `external-report` | Opened by someone other than a collaborator or an agent, so never worked on |
 
 Automation labels every new issue. An issue opened by anyone other than a
 collaborator or an agent gets `external-report`. Any other issue gets
@@ -259,8 +259,8 @@ tried, the question, options, and a recommendation, and stops. The issue keeps
 A collaborator rejects a PR by closing it without merging. If the PR comes from
 an [issue branch](../CLAUDE.md#branches) in this repository and its issue is
 open and labeled `with-agent`, automation then replaces `with-agent` with
-`needs-triage`, comments on it with a link to the closed PR, and deletes the
-PR's branch, so the next agent starts from `main`. The closed PR keeps its
+`needs-triage`, comments on the issue with a link to the closed PR, and deletes
+the PR's branch, so the next agent starts from `main`. The closed PR keeps its
 commits and discussion for triage. Other closed PRs are left alone.
 
 ### Merge
@@ -272,10 +272,10 @@ external report it links to, and GitHub deletes the PR's branch automatically.
 
 Agents are started by GitHub Actions:
 
-| Event                                                              | Agent task          |
-| ------------------------------------------------------------------ | ------------------- |
-| Collaborator adds `ready-for-agent` to an issue                    | Implement the issue |
-| Collaborator submits a review on a PR whose issue has `with-agent` | Address the review  |
+| Event                                                                                      | Agent Task          |
+| ------------------------------------------------------------------------------------------ | ------------------- |
+| Collaborator adds `ready-for-agent` to an issue                                            | Implement the issue |
+| Collaborator submits a review that is not an approval on a PR whose issue has `with-agent` | Address the review  |
 
 A collaborator can do the same tasks in an interactive Claude Code session.
 
