@@ -123,6 +123,7 @@ stateDiagram-v2
     Collaborator --> [*]: Collaborator merges PR
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
+    InProgress --> Collaborator: Agent stops early
     InProgress --> Failed: Run fails
     InReview --> Failed: Run fails
     Failed --> ReadyForAgent: Collaborator retries without a PR
