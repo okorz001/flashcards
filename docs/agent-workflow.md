@@ -227,9 +227,10 @@ ambiguous, comments conflict, or the fix breaks a check, it pushes no change for
 that thread. It replies with the question, options, and a recommendation, leaves
 the thread unresolved, and lists it in its closing comment. The issue keeps
 `with-agent`. A collaborator answers in the thread, and the next run picks the
-thread up again. A reply posted on its own counts as a review and starts a run,
-so a collaborator answering several threads adds the replies to one pending
-review and submits them together.
+thread up again. GitHub may record a reply posted on its own as a review, which
+starts a run whether or not the collaborator meant it to, so a collaborator
+answering several threads adds the replies to one pending review and submits
+them together.
 
 While an issue has `with-agent`, its plan does not change. To change the plan
 while a PR is open, a collaborator [takes the issue over](#labels), edits the
