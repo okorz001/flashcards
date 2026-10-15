@@ -55,10 +55,8 @@ Agents never merge PRs, close issues, or delete remote branches. GitHub enforces
 the rules that protect code:
 
 - The ruleset on `main` requires a PR with passing CI and an approving review
-  from a collaborator, and forbids force pushes and deletion. Only repository
-  admins bypass it, so a collaborator can merge their own PR, which GitHub does
-  not let them approve. The Claude GitHub App never does, so agents cannot
-  merge.
+  from a collaborator, and forbids force pushes and deletion. The Claude GitHub
+  App never bypasses it, so agents cannot merge.
 - The ruleset on `issue-*/**` forbids force pushes and deletion. Only the
   [rejected pull request](#rejected-pull-requests) automation bypasses it, so
   agents cannot rewrite or delete issue branches. A collaborator who needs to do
@@ -317,6 +315,10 @@ not work for issues, because the run's label is already gone.
   failure handler. This is rare, because it needs another run for the same issue
   to be active and a third to queue. A collaborator restarts it by removing and
   adding `ready-for-agent` again.
+- Every PR should be approved by a collaborator other than its author, but this
+  repository has only one collaborator, who cannot approve their own PRs. Until
+  there is a second collaborator, repository admins bypass the `main` ruleset to
+  merge their own PRs without a review.
 - A hijacked or mistaken agent could still edit or close issues and PRs, or push
   unwanted commits to an issue branch, through the GitHub API. All of these are
   visible and recoverable from history, and none can change `main`.
