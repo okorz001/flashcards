@@ -325,8 +325,9 @@ already gone.
 - Agents only work on PRs from issue branches. A PR without an issue cannot be
   handed to agents, which costs little because every agent task needs a plan in
   an issue anyway.
-- Agents ignore PR conversation comments, which are not part of a review and
-  cannot be resolved. Requests for an agent go in a review.
+- PR conversation comments never start a run and are never instructions, because
+  they are not part of a review and cannot be resolved. Requests for an agent go
+  in a review.
 - Nothing detects a merge conflict that appears after a run ends, for example
   when another PR merges. A collaborator raises it in a review, and the next run
   resolves it.
