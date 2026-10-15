@@ -175,7 +175,8 @@ An agent implements an issue as follows:
    with `agent-blocked`.
 7. When complete and all checks pass, check again that the issue is still open.
    If it is, open a PR that closes the issue and any external report it links
-   to. If not, push the work, comment, and remove `with-agent`.
+   to, then follow [CI](#ci). If not, push the work, comment, and remove
+   `with-agent`.
 
 A run only leaves `with-agent` on an issue that has an open PR. Every other way
 a run stops replaces or removes it. Only a run that ends abruptly can leave it
