@@ -315,10 +315,9 @@ queued run can start. It runs only when the agent job failed or was cancelled,
 including when it timed out or lost its runner, and never when the agent job
 succeeded or was skipped. It runs as automation, not as the agent, on its own
 runner. Queued runs that GitHub drops never start, so they never trigger it. A
-collaborator retries by replacing `agent-failed` with `ready-for-agent` if the
-issue has no PR, or with `with-agent` followed by a new review if it does.
-GitHub's re-run button does not work for issues, because the run's label is
-already gone.
+collaborator retries by [handing the issue back](#labels) in place of
+`agent-failed`. GitHub's re-run button does not work for issues, because the
+run's label is already gone.
 
 ## Accepted Tradeoffs
 
