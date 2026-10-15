@@ -139,6 +139,9 @@ in-depth detail.
 
 - Every Markdown doc starts with a `#` title, followed by a brief 1-3 sentence
   description starting with "This document".
+- Every doc in `docs/` has a `## Requirements` section right after its
+  description. When writing or changing a doc whose requirements are missing,
+  ask for them instead of writing them yourself.
 - Writing is brief; avoid filler.
 - Avoid excessive semicolons. Em dashes are fine in a definition list, but
   should be used sparingly to combine clauses.
