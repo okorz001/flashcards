@@ -88,11 +88,57 @@ GitHub enforces the rules that protect code:
   config, so an agent cannot act as automation. Only automation jobs get a
   `GITHUB_TOKEN` that can write.
 
-## Labels
+## Issue Lifecycle
 
-Status labels show where an issue stands:
+Every issue in the agent workflow is in exactly one state. GitHub issues have no
+status field, so each state is stored as a status label of the same name.
 
-| Label               | Meaning                                                                     |
+```mermaid
+stateDiagram-v2
+    [*] --> NeedsTriage: Collaborator or agent opens issue
+    [*] --> ReadyForAgent: Collaborator opens a fully planned issue
+    [*] --> ExternalReport: Anyone else opens issue
+    ExternalReport --> [*]: Fixed by a linked issue, or declined
+
+    NeedsTriage --> ReadyForAgent: Collaborator writes plan
+    NeedsTriage --> [*]: Collaborator closes as not planned
+    ReadyForAgent --> WithAgent: Agent starts
+    WithAgent --> WithAgent: Collaborator submits a review, agent addresses it
+    WithAgent --> Blocked: Agent has a question
+    WithAgent --> Failed: Run fails
+    WithAgent --> WithCollaborator: Agent stops early
+    Blocked --> ReadyForAgent: Collaborator updates plan
+    Blocked --> [*]: Collaborator closes as not planned
+    Failed --> ReadyForAgent: Collaborator retries without a PR
+    Failed --> WithAgent: Collaborator retries with a review
+
+    NeedsTriage --> WithCollaborator: Collaborator takes over
+    ReadyForAgent --> WithCollaborator: Collaborator takes over
+    WithAgent --> WithCollaborator: Collaborator takes over
+    Blocked --> WithCollaborator: Collaborator takes over
+    Failed --> WithCollaborator: Collaborator takes over
+    WithCollaborator --> ReadyForAgent: Collaborator hands back without a PR
+    WithCollaborator --> WithAgent: Collaborator hands back with a PR
+    WithCollaborator --> [*]: Collaborator closes issue
+
+    WithAgent --> [*]: PR merged
+    WithCollaborator --> [*]: PR merged
+    WithAgent --> NeedsTriage: PR closed without merging
+    WithCollaborator --> NeedsTriage: PR closed without merging
+    Failed --> NeedsTriage: PR closed without merging
+
+    NeedsTriage: needs-triage
+    ReadyForAgent: ready-for-agent
+    WithAgent: with-agent
+    Blocked: agent-blocked
+    Failed: agent-failed
+    WithCollaborator: with-collaborator
+    ExternalReport: external-report
+```
+
+### States
+
+| State               | Meaning                                                                     |
 | ------------------- | --------------------------------------------------------------------------- |
 | `needs-triage`      | Needs review by a collaborator before an agent may start it                 |
 | `ready-for-agent`   | Agreed, with a plan in the issue body, so an agent may start it             |
@@ -102,61 +148,17 @@ Status labels show where an issue stands:
 | `with-collaborator` | A collaborator owns the issue, so agents take no action on it               |
 | `external-report`   | Opened by someone other than a collaborator or an agent, so never worked on |
 
-Automation labels every new issue. An issue opened by anyone other than a
-collaborator or an agent gets `external-report`. Any other issue gets
+Automation sets the state of every new issue. An issue opened by anyone other
+than a collaborator or an agent gets `external-report`. Any other issue gets
 `needs-triage`, unless a collaborator opens it already fully planned and labels
 it `ready-for-agent` directly.
 
-A collaborator takes an issue over from agents by replacing its status label
-with `with-collaborator`, which also [stops agents](#stopping-agents). They hand
-it back by replacing `with-collaborator` with `with-agent` followed by a new
-review if it has an open PR, or with `ready-for-agent` if it does not. Every
-label swap adds the new label before removing the old one, so an issue never
-loses its status label partway through a swap.
-
-## Issue Lifecycle
-
-```mermaid
-stateDiagram-v2
-    [*] --> NeedsTriage: Collaborator or agent opens issue
-    [*] --> ExternalReport: Anyone else opens issue
-    ExternalReport --> [*]: Fixed by a collaborator's linked issue, or declined
-    [*] --> ReadyForAgent: Collaborator opens a fully planned issue
-    NeedsTriage --> ReadyForAgent: Collaborator writes plan
-    NeedsTriage --> [*]: Collaborator closes as not planned
-    ReadyForAgent --> InProgress: Agent starts
-    InProgress --> Blocked: Agent has a question
-    InProgress --> InReview: Agent opens PR
-    InReview --> InReview: Collaborator submits review, agent addresses it
-    InReview --> NeedsTriage: Collaborator closes PR without merging
-    InReview --> [*]: Collaborator merges PR
-    NeedsTriage --> Collaborator: Collaborator takes over
-    ReadyForAgent --> Collaborator: Collaborator takes over
-    Blocked --> Collaborator: Collaborator takes over
-    Failed --> Collaborator: Collaborator takes over
-    InReview --> Collaborator: Collaborator takes over
-    Collaborator --> InReview: Collaborator hands back with a PR
-    Collaborator --> ReadyForAgent: Collaborator hands back without a PR
-    Collaborator --> [*]: Collaborator merges PR
-    Collaborator --> [*]: Collaborator closes issue
-    Collaborator --> NeedsTriage: Collaborator closes PR without merging
-    Blocked --> ReadyForAgent: Collaborator updates plan
-    Blocked --> [*]: Collaborator closes as not planned
-    InProgress --> Collaborator: Agent stops early
-    InProgress --> Failed: Run fails
-    InReview --> Failed: Run fails
-    Failed --> ReadyForAgent: Collaborator retries without a PR
-    Failed --> InReview: Collaborator retries with a PR
-
-    NeedsTriage: needs-triage
-    ExternalReport: external-report
-    ReadyForAgent: ready-for-agent
-    InProgress: with-agent (in progress)
-    Blocked: agent-blocked
-    Failed: agent-failed
-    InReview: with-agent (PR open)
-    Collaborator: with-collaborator
-```
+A collaborator takes an issue over from agents by moving it to
+`with-collaborator`, which also [stops agents](#stopping-agents). They hand it
+back by moving it to `with-agent` followed by a new review if it has an open PR,
+or to `ready-for-agent` if it does not. A state change adds the new label before
+removing the old one, so an issue never loses its label partway through a
+change.
 
 ### Triage
 
@@ -167,7 +169,7 @@ decision that changes the plan is written into the body. When the plan is
 complete, a collaborator removes `needs-triage` or `agent-blocked` and adds
 `ready-for-agent`.
 
-A collaborator who accepts an [`external-report`](#labels) opens a new issue
+A collaborator who accepts an [`external-report`](#states) opens a new issue
 with the plan that links to it.
 
 ### Implementation
@@ -257,7 +259,7 @@ the thread unresolved, and lists it in its run summary comment. The issue keeps
 thread up again.
 
 While an issue has `with-agent`, its plan does not change. To change the plan
-while a PR is open, a collaborator [takes the issue over](#labels), edits the
+while a PR is open, a collaborator [takes the issue over](#states), edits the
 plan, and hands it back with a new review. If the change is significant enough
 to discard the current work, they close the PR instead, as described in
 [rejected pull requests](#rejected-pull-requests). If a review run finds the

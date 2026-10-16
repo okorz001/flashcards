@@ -84,12 +84,12 @@ completed in one PR. If an issue is too large for that, split it into
 sub-issues, each completable in one PR.
 
 Every issue is labeled as either `bug` or `enhancement`.
-[Status labels](docs/agent-workflow.md#labels) track where an issue stands.
+[Status labels](docs/agent-workflow.md#states) store where an issue stands.
 Label names use lowercase kebab-case (e.g. `needs-triage`).
 
 You may file issues for work you discover but do not do as part of the current
 change: bugs, refactors, or feature ideas. These issues must have the
-[`needs-triage`](docs/agent-workflow.md#labels) label. Describe the problem or
+[`needs-triage`](docs/agent-workflow.md#states) label. Describe the problem or
 proposal and how it was found; for bugs, include how to reproduce it if known.
 Do not act on it in the current change unless asked.
 
