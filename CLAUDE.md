@@ -97,7 +97,9 @@ Do not act on it in the current change unless asked.
 
 Branch names are short, descriptive, and kebab-case, e.g.
 `label-lifecycle-rules`. Branches for an issue start with the issue number:
-`issue-<number>/<description>`, e.g. `issue-5/ci-workflow`.
+`issue-<number>/<description>`, e.g. `issue-5/ci-workflow`. This prefix opts the
+branch into the [agent workflow](docs/agent-workflow.md), so a collaborator who
+wants to keep work on an issue out of it uses a different name.
 
 ### Pull Requests
 

@@ -313,9 +313,11 @@ issue, keyed by the issue number, which review runs take from the PR's issue
 branch. It holds the group until both have finished. Other events never join the
 group, so they cannot replace a waiting run. A new run waits for the current one
 to finish and never cancels it. GitHub keeps only one waiting run per group and
-cancels older waiting runs. A dropped review run loses nothing, because the next
-review run addresses all unaddressed feedback, but a dropped implementation run
-is an [accepted tradeoff](#accepted-tradeoffs).
+cancels older waiting runs. A dropped run loses nothing. A review run is
+replaced by a newer run that addresses all unaddressed feedback. An
+implementation run is replaced either by a newer implementation run that does
+the same work, or by a review run, which only does anything when the issue has
+an open PR, and then the implementation run would have stopped anyway.
 
 ### Run Summary Comment
 
@@ -374,18 +376,20 @@ that.
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
-- A waiting implementation run that GitHub drops for a newer run leaves its
-  issue on `ready-for-agent` with nothing running, and never triggers the
-  failure handler. This is rare, because it needs another run for the same issue
-  to be active and a third to queue. A collaborator restarts it by removing and
-  adding `ready-for-agent` again.
 - Repository admins bypass the `main` ruleset to merge their own PRs without a
   review, because GitHub does not let anyone approve their own PR and there is
   only one collaborator. An interactive session acting as an admin can use this
   bypass too, so [future work](#future-work) removes it.
-- A hijacked or mistaken agent could still edit or close issues and PRs, or push
-  unwanted commits to an issue branch, through the GitHub API. All of these are
-  visible and recoverable from history, and none can change `main`.
+- GitHub's permissions cannot separate the actions agents need from the ones
+  they must not take. Writing to issues and PRs, which agents need for labels,
+  comments, and PRs, also allows editing and closing them. A hijacked or
+  mistaken agent could do so through the GitHub API, or push unwanted commits to
+  an issue branch. All of these are visible and recoverable from history, and
+  none can change `main`.
+- Rulesets protect only `main` and issue branches, so an agent could delete or
+  force push any other branch. Protecting every branch would limit how humans
+  work, and giving agents a fork as a sandbox is not practical for this
+  repository.
 
 ## Future Work
 
