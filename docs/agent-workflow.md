@@ -6,6 +6,23 @@ collaborators plan, decide, and review.
 
 ## Requirements
 
+1. The human workflow must not be affected, and the agent workflow is strictly
+   opt-in. Headless agents are distinct from automation, which behaves
+   deterministically.
+2. Humans must approve all changes from headless agents.
+3. Headless agents cannot take destructive actions, such as deleting or force
+   pushing, and cannot merge. Restrictions on agents are enforced externally,
+   instead of trusting agents to behave responsibly.
+4. Headless agents only take instructions from trusted content written by
+   trusted users.
+5. Headless agents don't make large decisions without human approval.
+6. Headless agents communicate in both directions only through issues and code
+   review, never through a direct interactive session.
+7. Agent activity and status, including failures, are visible on issues and pull
+   requests, without reading workflow logs.
+8. An issue can be handed back and forth between humans and agents whenever
+   desired.
+
 ## Roles
 
 | Role         | Who                                                                                         |
