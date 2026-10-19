@@ -348,12 +348,11 @@ usage limit, automation replaces the issue's status labels with `agent-failed`
 and comments with a link to the run. If the issue has `with-collaborator`, it
 only comments. This automation is a separate job in the agent's workflow, after
 the agent job, so it finishes before the issue's next queued run can start. It
-runs only when the agent job failed or was cancelled, including when it timed
-out or lost its runner, and never when the agent job succeeded or was skipped.
-It runs as automation, not as the agent, on its own runner. Queued runs that
-GitHub drops never start, so they never trigger it. A collaborator retries by
-replacing `agent-failed` with `ready-for-agent` if the issue has no PR, or by
-submitting a review if it has one.
+runs only when the agent job failed or was cancelled, and never when the agent
+job succeeded or was skipped. It runs as automation, not as the agent, on its
+own runner. Queued runs that GitHub drops never start, so they never trigger it.
+A collaborator retries by replacing `agent-failed` with `ready-for-agent` if the
+issue has no PR, or by submitting a review if it has one.
 
 ### Stopping Agents
 
