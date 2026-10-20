@@ -166,8 +166,7 @@ A collaborator reviews an issue labeled `needs-triage` or `agent-blocked`, and
 writes or updates the plan in the issue body. The issue body is the
 authoritative plan: comments are for triage discussion and the record, and any
 decision that changes the plan is written into the body. When the plan is
-complete, a collaborator removes `needs-triage` or `agent-blocked` and adds
-`ready-for-agent`.
+complete, a collaborator moves the issue to `ready-for-agent`.
 
 A collaborator who accepts an [`external-report`](#states) opens a new issue
 with the plan that links to it.
@@ -315,13 +314,14 @@ issue, keyed by the issue number, which review runs take from the PR's issue
 branch. It holds the group until both have finished. Other events never join the
 group, so they cannot replace a waiting run. A new run waits for the current one
 to finish and never cancels it. GitHub keeps only one waiting run per group and
-cancels older waiting runs. A dropped run loses nothing. A review run is
-replaced by a newer review run that addresses all unaddressed feedback, or, if a
-collaborator wrongly moves an issue with an open PR to `ready-for-agent`, by an
-implementation run that stops and moves the issue to `with-collaborator`. An
-implementation run is replaced either by a newer implementation run that does
-the same work, or by a review run, which only does anything when the issue has
-an open PR, and then the implementation run would have stopped anyway.
+cancels older waiting runs. A dropped run loses nothing in normal use. A review
+run is replaced by a newer review run that addresses all unaddressed feedback,
+or, if a collaborator wrongly moves an issue with an open PR to
+`ready-for-agent`, by an implementation run that stops and moves the issue to
+`with-collaborator`. An implementation run is replaced either by a newer
+implementation run that does the same work, or by a review run, which only does
+anything when the issue has an open PR, and then the implementation run would
+have stopped anyway.
 
 ### Run Summary Comment
 
