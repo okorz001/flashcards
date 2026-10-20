@@ -316,7 +316,9 @@ branch. It holds the group until both have finished. Other events never join the
 group, so they cannot replace a waiting run. A new run waits for the current one
 to finish and never cancels it. GitHub keeps only one waiting run per group and
 cancels older waiting runs. A dropped run loses nothing. A review run is
-replaced by a newer run that addresses all unaddressed feedback. An
+replaced by a newer review run that addresses all unaddressed feedback, or, if a
+collaborator wrongly moves an issue with an open PR to `ready-for-agent`, by an
+implementation run that stops and moves the issue to `with-collaborator`. An
 implementation run is replaced either by a newer implementation run that does
 the same work, or by a review run, which only does anything when the issue has
 an open PR, and then the implementation run would have stopped anyway.
