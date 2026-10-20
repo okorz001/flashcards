@@ -382,6 +382,9 @@ stops any work in progress within seconds.
   resolves it.
 - Nothing reacts automatically when CI breaks on `main`. A collaborator deals
   with it as a separate issue.
+
+## Known Issues
+
 - Repository admins bypass the `main` ruleset to merge their own PRs without a
   review, because GitHub does not let anyone approve their own PR and there is
   only one collaborator. An interactive session acting as an admin can use this
