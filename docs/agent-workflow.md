@@ -269,12 +269,14 @@ above.
 
 ### Rejected Pull Requests
 
-A collaborator rejects a PR by closing it without merging. If the PR comes from
-an [issue branch](../CLAUDE.md#branches) in this repository and its issue is
-open, automation then sets the issue's status label to `needs-triage`, replacing
-any other, comments on the issue with a link to the closed PR, and deletes the
-PR's branch, so the next agent starts from `main`. The closed PR keeps its
-commits and discussion for triage. Other closed PRs are left alone.
+A collaborator rejects a PR by closing it without merging. If an agent run is
+active on the issue, a collaborator [stops agents](#stopping-agents) first. If
+the PR comes from an [issue branch](../CLAUDE.md#branches) in this repository
+and its issue is open, automation then sets the issue's status label to
+`needs-triage`, replacing any other, comments on the issue with a link to the
+closed PR, and deletes the PR's branch, so the next agent starts from `main`.
+The closed PR keeps its commits and discussion for triage. Other closed PRs are
+left alone.
 
 ### Merge
 
