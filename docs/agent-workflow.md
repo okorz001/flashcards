@@ -384,10 +384,12 @@ stops any work in progress within seconds.
   bypass too, so [future work](#future-work) removes it.
 - GitHub's permissions cannot separate the actions agents need from the ones
   they must not take. Writing to issues and PRs, which agents need for labels,
-  comments, and PRs, also allows editing and closing them. A hijacked or
-  mistaken agent could do so through the GitHub API, or push unwanted commits to
-  an issue branch. All of these are visible and recoverable from history, and
-  none can change `main`.
+  comments, and PRs, also allows editing or closing them and editing or deleting
+  anyone's comments, including their edit history. A hijacked or mistaken agent
+  could do so through the GitHub API, or push unwanted commits to an issue
+  branch. Each of these leaves a visible trace, such as a timeline event or
+  commit, but deleted comments and edit history cannot be restored. None of
+  these can change `main`.
 - Rulesets protect only `main` and issue branches, so an agent could delete or
   force push any other branch. Protecting every branch would limit how humans
   work, and giving agents a fork as a sandbox is not practical for this
