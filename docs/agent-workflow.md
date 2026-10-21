@@ -325,11 +325,12 @@ an open PR, and then the implementation run would have stopped anyway.
 
 ### Run Summary Comment
 
-Every run ends with a run summary comment on the issue or PR it worked on,
-whether it finished or stopped early, so those threads are a complete log of
-agent activity. The comment states the outcome and why: a link to the opened PR,
-a summary of the review fixes pushed, the question that blocked it, or the
-reason it stopped.
+Every run ends with a run summary comment, on the issue for an implementation
+run and on the PR for a review run, whether it finished or stopped early, so
+those threads are a complete log of agent activity. A run that ends abruptly
+cannot post one, so [failure handling](#failure-handling) comments instead. The
+comment states the outcome and why: a link to the opened PR, a summary of the
+review fixes pushed, the question that blocked it, or the reason it stopped.
 
 When a review run has responded to the reviews, by addressing them or by
 stopping on a question, its run summary comment starts with a line recording its
