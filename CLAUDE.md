@@ -88,10 +88,9 @@ Every issue is labeled as either `bug` or `enhancement`.
 Label names use lowercase kebab-case (e.g. `needs-triage`).
 
 You may file issues for work you discover but do not do as part of the current
-change: bugs, refactors, or feature ideas. These issues must have the
-[`needs-triage`](docs/agent-workflow.md#states) label. Describe the problem or
-proposal and how it was found; for bugs, include how to reproduce it if known.
-Do not act on it in the current change unless asked.
+change: bugs, refactors, or feature ideas. Describe the problem or proposal and
+how it was found; for bugs, include how to reproduce it if known. Do not act on
+it in the current change unless asked.
 
 ### Branches
 
