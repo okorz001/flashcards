@@ -137,15 +137,15 @@ stateDiagram-v2
 
 ### States
 
-| State               | Meaning                                                                     |
-| ------------------- | --------------------------------------------------------------------------- |
-| `needs-triage`      | Needs review by a collaborator before an agent may start it                 |
-| `ready-for-agent`   | Agreed, with a plan in the issue body, so an agent may start it             |
-| `with-agent`        | An agent owns the issue and its PR, so its [plan is frozen](#review)        |
-| `agent-blocked`     | An agent stopped on a question, and needs triage again                      |
-| `agent-failed`      | An agent run failed, and a collaborator checks why before a retry           |
-| `with-collaborator` | A collaborator owns the issue, so agents take no action on it               |
-| `external-report`   | Opened by someone other than a collaborator or an agent, so never worked on |
+| State               | Meaning                                                                         |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `needs-triage`      | Needs review by a collaborator before an agent may start it                     |
+| `ready-for-agent`   | Agreed, with a plan in the issue body, so an agent may start it                 |
+| `with-agent`        | An agent owns the issue and its PR, so its [plan is frozen](#changing-the-plan) |
+| `agent-blocked`     | An agent stopped on a question, and needs triage again                          |
+| `agent-failed`      | An agent run failed, and a collaborator checks why before a retry               |
+| `with-collaborator` | A collaborator owns the issue, so agents take no action on it                   |
+| `external-report`   | Opened by someone other than a collaborator or an agent, so never worked on     |
 
 Automation sets the state of every new issue. An issue opened by anyone other
 than a collaborator or an agent gets `external-report`. Any other issue gets
@@ -241,8 +241,8 @@ run replaces it with `with-agent`, which is how a review
 The agent follows review instructions that fit the issue's plan, such as fixes,
 refinements, and implementation details. If an instruction changes the plan's
 scope or contradicts a decision the plan records, the agent replies saying so
-and makes no change for it. A reviewer who wants that changes the plan instead,
-as described below.
+and makes no change for it. A reviewer who wants that
+[changes the plan](#changing-the-plan) instead.
 
 Approvals start nothing, even if they include comments, so their comments are
 optional. A collaborator who wants an answer submits a review without approving.
@@ -256,6 +256,8 @@ the thread unresolved, and lists it in its run summary comment. The issue keeps
 `with-agent`. A collaborator answers in the thread, and the next run picks the
 thread up again.
 
+#### Changing the Plan
+
 While an issue has `with-agent`, its plan does not change. To change the plan
 while a PR is open, a collaborator [takes the issue over](#states), edits the
 plan, and hands it back with a new review. If the change is significant enough
@@ -263,8 +265,7 @@ to discard the current work, they close the PR instead, as described in
 [rejected pull requests](#rejected-pull-requests). If a review run finds the
 plan wrong or incomplete, it changes nothing and raises it in its run summary
 comment on the PR, with options and a recommendation. A collaborator answers in
-a review if an instruction that fits the plan settles it, or changes the plan as
-above.
+a review if an instruction that fits the plan settles it, or changes the plan.
 
 ### Rejected Pull Requests
 
