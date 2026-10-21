@@ -141,7 +141,7 @@ stateDiagram-v2
 | ------------------- | --------------------------------------------------------------------------- |
 | `needs-triage`      | Needs review by a collaborator before an agent may start it                 |
 | `ready-for-agent`   | Agreed, with a plan in the issue body, so an agent may start it             |
-| `with-agent`        | An agent owns the issue and its PR, so the plan is frozen                   |
+| `with-agent`        | An agent owns the issue and its PR, so its [plan is frozen](#review)        |
 | `agent-blocked`     | An agent stopped on a question, and needs triage again                      |
 | `agent-failed`      | An agent run failed, and a collaborator checks why before a retry           |
 | `with-collaborator` | A collaborator owns the issue, so agents take no action on it               |
@@ -235,8 +235,8 @@ A review run first checks that the issue still has `with-agent` or
 `agent-failed`, does not have `with-collaborator`, and that the PR is still
 open, because these can change while the run waits to start. If not, it comments
 that it stopped and changes nothing else. If the issue has `agent-failed`, the
-run replaces it with `with-agent`, so a review is all it takes to retry after a
-failure.
+run replaces it with `with-agent`, which is how a review
+[retries](#failure-handling) a failed issue.
 
 The agent follows review instructions that fit the issue's plan, such as fixes,
 refinements, and implementation details. If an instruction changes the plan's
