@@ -69,9 +69,8 @@ Agents only get the GitHub tools they need:
 - Replying to and resolving review threads
 
 They get no tool that edits an issue's title, body, or state, and no shell
-access to `gh` or `curl`. These limits are defense in depth, not enforcement: an
-agent still runs commands such as `npm` and `git`, so a hijacked or mistaken
-agent could call the GitHub API with its token directly.
+access to `gh` or `curl`. These limits are defense in depth, on top of what
+GitHub enforces.
 
 Agents never merge PRs, close issues, force push, or delete remote branches.
 GitHub enforces the rules that protect code:
@@ -316,14 +315,11 @@ issue, keyed by the issue number, which review runs take from the PR's issue
 branch. It holds the group until both have finished. Other events never join the
 group, so they cannot replace a waiting run. A new run waits for the current one
 to finish and never cancels it. GitHub keeps only one waiting run per group and
-cancels older waiting runs. A dropped run loses nothing in normal use. A review
-run is replaced by a newer review run that addresses all unaddressed feedback,
-or, if a collaborator wrongly moves an issue with an open PR to
-`ready-for-agent`, by an implementation run that stops and moves the issue to
-`with-collaborator`. An implementation run is replaced either by a newer
-implementation run that does the same work, or by a review run, which only does
-anything when the issue has an open PR, and then the implementation run would
-have stopped anyway.
+cancels older waiting runs. A dropped run loses nothing. A review run is
+replaced by a newer review run that addresses all unaddressed feedback. An
+implementation run is replaced either by a newer implementation run that does
+the same work, or by a review run, which only does anything when the issue has
+an open PR, and then the implementation run would have stopped anyway.
 
 ### Run Summary Comment
 
@@ -363,8 +359,7 @@ issue has no PR, or by submitting a review if it has one.
 A collaborator stops agents working on an issue by adding `with-collaborator`.
 Automation then cancels the issue's agent runs, waiting or in progress, and once
 they have ended, removes any other status label an agent added in the meantime.
-Agents start no new work on an issue with `with-collaborator`, and the cancel
-stops any work in progress within seconds.
+Agents start no new work on an issue with `with-collaborator`.
 
 ## Accepted Tradeoffs
 
@@ -389,18 +384,27 @@ stops any work in progress within seconds.
   review, because GitHub does not let anyone approve their own PR and there is
   only one collaborator. An interactive session acting as an admin can use this
   bypass too, so [future work](#future-work) removes it.
-- GitHub's permissions cannot separate the actions agents need from the ones
-  they must not take. Writing to issues and PRs, which agents need for labels,
-  comments, and PRs, also allows editing or closing them and editing or deleting
-  anyone's comments, including their edit history. A hijacked or mistaken agent
-  could do so through the GitHub API, or push unwanted commits to an issue
-  branch. Each of these leaves a visible trace, such as a timeline event or
-  commit, but deleted comments and edit history cannot be restored. None of
-  these can change `main`.
+- Agents still run commands such as `npm` and `git`, so a hijacked or mistaken
+  agent could bypass its tool limits and call the GitHub API with its token
+  directly. GitHub's permissions cannot separate the actions agents need from
+  the ones they must not take. Writing to issues and PRs, which agents need for
+  labels, comments, and PRs, also allows editing or closing them and editing or
+  deleting anyone's comments, including their edit history. A hijacked or
+  mistaken agent could do so through the GitHub API, or push unwanted commits to
+  an issue branch. Each of these leaves a visible trace, such as a timeline
+  event or commit, but deleted comments and edit history cannot be restored.
+  None of these can change `main`.
 - Rulesets protect only `main` and issue branches, so an agent could delete or
   force push any other branch. Protecting every branch would limit how humans
   work, and giving agents a fork as a sandbox is not practical for this
   repository.
+- If a collaborator moves an issue with an open PR to `ready-for-agent` instead
+  of [handing it back](#states) with a review, the implementation run that
+  starts can replace a waiting review run. It stops and moves the issue to
+  `with-collaborator`, and that review is not addressed.
+- A run in progress can still act for a few seconds after a collaborator adds
+  `with-collaborator`, until the cancel takes effect, for example by pushing a
+  commit or posting a comment.
 
 ## Future Work
 
