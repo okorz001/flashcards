@@ -314,7 +314,9 @@ not an approval on a PR from an [issue branch](../CLAUDE.md#branches) in this
 repository. The Claude GitHub App is never listed in `allowed_bots`, so agents
 cannot start runs themselves. If a collaborator adds `ready-for-agent` to an
 issue opened by anyone else, automation removes the label and comments instead
-of starting a run.
+of starting a run. If they add it to an issue with an open PR, automation moves
+the issue to `with-agent` instead of starting a run, and comments that a review
+starts the next run.
 
 ### Concurrency
 
@@ -409,10 +411,6 @@ start no new work on an issue with `with-collaborator`.
   force push any other branch. Protecting every branch would limit how humans
   work, and giving agents a fork as a sandbox is not practical for this
   repository.
-- If a collaborator moves an issue with an open PR to `ready-for-agent` instead
-  of [handing it back](#states) with a review, the implementation run that
-  starts can replace a waiting review run. It stops and moves the issue to
-  `with-collaborator`, and that review is not addressed.
 - A run in progress can still act for a few seconds after a collaborator adds
   `with-collaborator`, until the cancel takes effect, for example by pushing a
   commit or posting a comment.
