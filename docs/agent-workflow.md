@@ -314,12 +314,12 @@ Automation first checks each event, and only events that can start agent work go
 on to the agent's own workflow: a collaborator adding `ready-for-agent` to an
 issue opened by a collaborator or an agent, and a collaborator's review that is
 not an approval on a PR from an [issue branch](../CLAUDE.md#branches) in this
-repository. The Claude GitHub App is never listed in `allowed_bots`, so agents
-cannot start runs themselves. If a collaborator adds `ready-for-agent` to an
-issue opened by anyone else, automation removes the label and comments instead
-of starting a run. If they add it to an issue with an open PR, automation moves
-the issue to `with-agent` instead of starting a run, and comments that a review
-starts the next run.
+repository, whose issue is in `with-agent` or `agent-failed`. The Claude GitHub
+App is never listed in `allowed_bots`, so agents cannot start runs themselves.
+If a collaborator adds `ready-for-agent` to an issue opened by anyone else,
+automation removes the label and comments instead of starting a run. If they add
+it to an issue with an open PR, automation moves the issue to `with-agent`
+instead of starting a run, and comments that a review starts the next run.
 
 ### Concurrency
 
