@@ -29,7 +29,7 @@ collaborators plan, decide, and review.
 | ------------ | ------------------------------------------------------------------------------------------- |
 | Collaborator | A person with write access to the repository. Triages issues, writes plans, and reviews PRs |
 | Agent        | A headless Claude Code session started by GitHub Actions, acting as the Claude GitHub App   |
-| Automation   | Plain GitHub Actions workflows that update labels, branches, and runs, no AI                |
+| Automation   | Plain GitHub Actions workflows, without AI, that update labels, branches, and runs          |
 
 An interactive Claude Code session acts on behalf of the collaborator who
 started it, and counts as that collaborator.
@@ -255,10 +255,10 @@ scope or contradicts a decision the plan records, the agent replies saying so
 and makes no change for it. A reviewer who wants that
 [changes the plan](#changing-the-plan) instead.
 
-Approvals start nothing, even if they include comments, so their comments are
-optional. A collaborator who wants an answer submits a review without approving.
-A run started later for another reason addresses approvals' threads and summary
-text like any other review.
+Approvals start nothing, even if they include comments. Their comments wait
+until something else starts a review run, which then addresses them like any
+other review. A collaborator who wants an answer now submits a review without
+approving.
 
 If the agent cannot address a thread, for example because the comment is
 ambiguous, comments conflict, or the fix breaks a check, it pushes no change for
