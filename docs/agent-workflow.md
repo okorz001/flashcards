@@ -172,8 +172,9 @@ A collaborator reviews an issue labeled `needs-triage` or `agent-blocked`, and
 writes or updates the plan in the issue body. The issue body is the
 authoritative plan: comments are for triage discussion and the record, and any
 decision that changes the plan is written into the body. A collaborator answers
-an agent's question the same way, by writing the answer into the plan. When the
-plan is complete, a collaborator moves the issue to `ready-for-agent`.
+the question of an `agent-blocked` issue the same way, by writing the answer
+into the plan. When the plan is complete, a collaborator moves the issue to
+`ready-for-agent`.
 
 A collaborator who accepts an [`external-report`](#states) opens a new issue
 with the plan that links to it.
