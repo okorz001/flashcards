@@ -86,6 +86,10 @@ GitHub enforces the rules that protect code:
   agent job's own `GITHUB_TOKEN` is read-only and is not stored in its git
   config, so an agent cannot act as automation. Only automation jobs get a
   `GITHUB_TOKEN` that can write.
+- The Claude GitHub App's token for each run has no Workflows permission, so an
+  agent cannot change workflow files, for example to make a workflow on its
+  branch run with a write token. Issues that change workflows are collaborator
+  work.
 
 ## Issue Lifecycle
 
@@ -408,6 +412,11 @@ Agents start no new work on an issue with `with-collaborator`.
 - A run in progress can still act for a few seconds after a collaborator adds
   `with-collaborator`, until the cancel takes effect, for example by pushing a
   commit or posting a comment.
+- The Claude GitHub App's installation grants the Workflows permission, and only
+  the token request in each run leaves it out. An agent that could mint its own
+  token through its job's OIDC credentials could ask for it, then change
+  workflow files and act as automation. [Future work](#future-work) replaces the
+  App with one that does not have the permission.
 
 ## Future Work
 
@@ -420,3 +429,7 @@ Agents start no new work on an issue with `with-collaborator`.
   never approve agents' PRs, which GitHub enforces because an author cannot
   approve their own PR. It is not yet known whether an approval from the Claude
   GitHub App satisfies the ruleset.
+- Replace the Claude GitHub App with a custom GitHub App for this repository,
+  created from the manifest that claude-code-action provides. It has only the
+  permissions agents need and no Workflows permission, so no token for an agent
+  can change workflow files.
