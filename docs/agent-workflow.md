@@ -363,9 +363,10 @@ issue has no PR, or by submitting a review if it has one.
 
 ### Stopping Agents
 
-A collaborator stops agents working on an issue by adding `with-collaborator`.
-Automation then cancels the issue's agent runs, waiting or in progress, and once
-they have ended, removes any other status label an agent added in the meantime.
+A collaborator stops agents working on an issue by moving it to
+`with-collaborator`. When a collaborator, not an agent, makes that change,
+automation cancels the issue's agent runs, waiting or in progress, and once they
+have ended, removes any other status label an agent added in the meantime.
 Agents start no new work on an issue with `with-collaborator`.
 
 ## Accepted Tradeoffs
