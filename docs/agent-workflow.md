@@ -171,8 +171,9 @@ except `with-collaborator`.
 A collaborator reviews an issue labeled `needs-triage` or `agent-blocked`, and
 writes or updates the plan in the issue body. The issue body is the
 authoritative plan: comments are for triage discussion and the record, and any
-decision that changes the plan is written into the body. When the plan is
-complete, a collaborator moves the issue to `ready-for-agent`.
+decision that changes the plan is written into the body. A collaborator answers
+an agent's question the same way, by writing the answer into the plan. When the
+plan is complete, a collaborator moves the issue to `ready-for-agent`.
 
 A collaborator who accepts an [`external-report`](#states) opens a new issue
 with the plan that links to it.
@@ -189,9 +190,10 @@ An agent implements an issue as follows:
 2. Check that the issue is open and has no open PR. If not, comment saying so,
    replace `with-agent` with `with-collaborator`, and stop.
 3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
-   earlier work on the issue. If more than one exists, comment listing them and
-   asking which to continue, replace `with-agent` with `agent-blocked`, and
-   stop. Otherwise, create a new branch from `main`.
+   earlier work on the issue. If more than one exists and the plan does not name
+   which to continue, comment listing them and asking which to continue, replace
+   `with-agent` with `agent-blocked`, and stop. Otherwise, create a new branch
+   from `main`.
 4. Implement the plan in the issue body.
 5. If blocked, follow the [partial work](../CLAUDE.md#working-agreement) rule,
    comment on the issue with what is done, what is not, the question with
