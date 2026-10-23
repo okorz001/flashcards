@@ -109,6 +109,8 @@ stateDiagram-v2
     WithAgent --> WithAgent: Collaborator submits a review, agent addresses it
     WithAgent --> Blocked: Agent has a question
     WithAgent --> Failed: Run fails
+    ReadyForAgent --> Failed: Run fails
+    Blocked --> Failed: Run fails
     WithAgent --> WithCollaborator: Agent stops early
     Blocked --> ReadyForAgent: Collaborator updates plan
     Blocked --> [*]: Collaborator closes as not planned
@@ -161,7 +163,8 @@ A collaborator takes an issue over from agents by moving it to
 back by moving it to `with-agent` followed by a new review if it has an open PR,
 or to `ready-for-agent` if it does not. A state change adds the new label before
 removing the old one, so an issue never loses its label partway through a
-change.
+change. Failure handling can move an issue to `agent-failed` from any state
+except `with-collaborator`.
 
 ### Triage
 
