@@ -164,7 +164,8 @@ back by moving it to `with-agent` followed by a new review if it has an open PR,
 or to `ready-for-agent` if it does not. A state change adds the new label before
 removing the old one, so an issue never loses its label partway through a
 change. Failure handling can move an issue to `agent-failed` from any state
-except `with-collaborator`.
+except `with-collaborator`. A collaborator can close an issue as not planned in
+any state.
 
 ### Triage
 
