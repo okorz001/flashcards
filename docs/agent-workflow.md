@@ -93,8 +93,11 @@ GitHub enforces the rules that protect code:
 
 ## Issue Lifecycle
 
-Every issue in the agent workflow is in exactly one state. GitHub issues have no
-status field, so each state is stored as a status label of the same name.
+Every issue gets a state when it is opened, but agents act only on work a
+collaborator opts in: an issue by moving it to `ready-for-agent`, and a PR by
+opening it from an [issue branch](../CLAUDE.md#branches). Each issue is in
+exactly one state. GitHub issues have no status field, so each state is stored
+as a status label of the same name.
 
 ```mermaid
 stateDiagram-v2
