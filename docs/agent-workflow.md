@@ -108,7 +108,7 @@ stateDiagram-v2
 
     NeedsTriage --> ReadyForAgent: Collaborator writes plan
     NeedsTriage --> [*]: Collaborator closes as not planned
-    ReadyForAgent --> WithAgent: Agent starts
+    ReadyForAgent --> WithAgent: Agent starts, or automation if a PR is open
     WithAgent --> WithAgent: Collaborator submits a review, agent addresses it
     WithAgent --> Blocked: Agent has a question
     WithAgent --> Failed: Run fails
@@ -230,10 +230,9 @@ tried, the question, options, and a recommendation, and stops. The issue keeps
 
 ### Review
 
-When a collaborator submits a review with comments or requested changes on a PR
-from an [issue branch](../CLAUDE.md#branches) in this repository whose issue is
-labeled `with-agent` or `agent-failed`, an agent addresses all unaddressed
-collaborator feedback on the PR, not only the review that started the run:
+When a collaborator submits a [qualifying review](#triggers), an agent addresses
+all unaddressed collaborator feedback on the PR, not only the review that
+started the run:
 
 - Every unresolved review thread with a comment by a collaborator. Only
   collaborators' comments in it count as [instructions](#trust). The agent
@@ -303,10 +302,10 @@ external report it links to, and GitHub deletes the PR's branch automatically.
 
 Agents are started by GitHub Actions:
 
-| Event                                                                                                        | Agent Task          |
-| ------------------------------------------------------------------------------------------------------------ | ------------------- |
-| Collaborator adds `ready-for-agent` to an issue                                                              | Implement the issue |
-| Collaborator submits a review that is not an approval on a PR whose issue has `with-agent` or `agent-failed` | Address the review  |
+| Event                                                 | Agent Task          |
+| ----------------------------------------------------- | ------------------- |
+| Collaborator adds `ready-for-agent` to an issue       | Implement the issue |
+| Collaborator submits a [qualifying review](#triggers) | Address the review  |
 
 A collaborator can do the same tasks in an interactive Claude Code session.
 
@@ -367,16 +366,16 @@ no cutoff, so the previous one stays in effect.
 
 If the agent job fails or is cancelled, for example from a crash, timeout, or
 usage limit, automation replaces the issue's status labels with `agent-failed`
-and comments with a link to the run where the run would have posted its
-[run summary comment](#run-summary-comment). If the issue has
-`with-collaborator`, it only comments. This automation is a separate job in the
-agent's workflow, after the agent job, so it finishes before the issue's next
-queued run can start. It runs only when the agent job failed or was cancelled,
-and never when the agent job succeeded or was skipped. It runs as automation,
-not as the agent, on its own runner. Queued runs that GitHub drops never start,
-so they never trigger it. A collaborator retries by replacing `agent-failed`
-with `ready-for-agent` if the issue has no PR, or by submitting a review if it
-has one.
+and comments, where the run would have posted its
+[run summary comment](#run-summary-comment), with a link to the run. If the
+issue has `with-collaborator`, it only comments. This automation is a separate
+job in the agent's workflow, after the agent job, so it finishes before the
+issue's next queued run can start. It runs only when the agent job failed or was
+cancelled, and never when the agent job succeeded or was skipped. It runs as
+automation, not as the agent, on its own runner. Queued runs that GitHub drops
+never start, so they never trigger it. A collaborator retries by replacing
+`agent-failed` with `ready-for-agent` if the issue has no PR, or by submitting a
+review if it has one.
 
 ### Stopping Agents
 
