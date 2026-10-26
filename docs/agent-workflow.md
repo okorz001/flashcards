@@ -436,8 +436,9 @@ status label. Agents start no new work on an issue with `with-collaborator`.
   App with one that does not have the permission.
 - GitHub's automatic deletion of merged branches may only work when a repository
   admin merges, because the `issue-*/**` ruleset forbids deletion. If merged
-  issue branches are left behind, automation will delete them on merge, as it
-  does for [rejected pull requests](#rejected-pull-requests).
+  issue branches turn out to be left behind, the fix is for automation to delete
+  them on merge, as it does for
+  [rejected pull requests](#rejected-pull-requests).
 
 ## Future Work
 
