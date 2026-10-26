@@ -255,9 +255,9 @@ run replaces it with `with-agent`, which is how a review
 
 The agent follows review instructions that fit the issue's plan, such as fixes,
 refinements, and implementation details. If an instruction changes the plan's
-scope or contradicts a decision the plan records, the agent replies saying so
-and makes no change for it. A reviewer who wants that
-[changes the plan](#changing-the-plan) instead.
+scope or contradicts a decision the plan records, the agent replies saying so,
+makes no change for it, and leaves the thread unresolved. A reviewer who wants
+that [changes the plan](#changing-the-plan) instead.
 
 Approvals start nothing, even if they include comments. Their comments wait
 until something else starts a review run, which then addresses them like any
