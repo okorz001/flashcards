@@ -234,10 +234,12 @@ When a collaborator submits a [qualifying review](#triggers), an agent addresses
 all unaddressed collaborator feedback on the PR, not only the review that
 started the run:
 
-- Every unresolved review thread with a comment by a collaborator. Only
-  collaborators' comments in it count as [instructions](#trust). The agent
-  pushes a fix, replies, and resolves the thread. A collaborator who is not
-  satisfied reopens the thread or replies in it.
+- Every unaddressed review thread: one that is unresolved, has a comment by a
+  collaborator, and has no reply from an agent since the newest collaborator
+  comment in it. Only collaborators' comments in it count as
+  [instructions](#trust). The agent pushes a fix, replies, and resolves the
+  thread. A collaborator who is not satisfied reopens the thread or replies in
+  it.
 - The summary text of every collaborator review submitted after the most recent
   [cutoff](#run-summary-comment) posted by the Claude GitHub App, or of every
   collaborator review if there is none. Cutoffs in anyone else's comments are
