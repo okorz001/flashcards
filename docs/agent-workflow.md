@@ -434,6 +434,10 @@ status label. Agents start no new work on an issue with `with-collaborator`.
   token through its job's OIDC credentials could ask for it, then change
   workflow files and act as automation. [Future work](#future-work) replaces the
   App with one that does not have the permission.
+- GitHub's automatic deletion of merged branches may only work when a repository
+  admin merges, because the `issue-*/**` ruleset forbids deletion. If merged
+  issue branches are left behind, automation will delete them on merge, as it
+  does for [rejected pull requests](#rejected-pull-requests).
 
 ## Future Work
 
