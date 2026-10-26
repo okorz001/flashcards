@@ -47,9 +47,9 @@ Instructions come only from the body of an issue opened by a collaborator or an
 agent, and from reviews written by collaborators, including their comments in
 any review thread, whoever started it. Issue and PR conversation comments are
 context, never instructions. An issue's author can always edit its body, so
-automation never starts an agent on an issue opened by anyone else, even if it
-is labeled `ready-for-agent`. Agents treat content from anyone else as untrusted
-information, never as instructions.
+automation [never starts an agent](#triggers) on an issue opened by anyone else,
+even if it is labeled `ready-for-agent`. Agents treat content from anyone else
+as untrusted information, never as instructions.
 
 Only collaborators approve work. Agents never add `ready-for-agent`, remove
 `with-collaborator`, edit an issue body, or remove `needs-triage` or
@@ -154,7 +154,7 @@ stateDiagram-v2
 | `with-agent`        | An agent owns the issue and its PR, so its [plan is frozen](#changing-the-plan) |
 | `agent-blocked`     | An agent stopped on a question, and needs triage again                          |
 | `agent-failed`      | An agent run failed, and a collaborator checks why before a retry               |
-| `with-collaborator` | A collaborator owns the issue, so agents take no action on it                   |
+| `with-collaborator` | A collaborator owns the issue, so agents start no new work on it                |
 | `external-report`   | Opened by someone other than a collaborator or an agent, so never worked on     |
 
 Automation sets the state of every new issue. An issue opened by anyone other
@@ -319,17 +319,17 @@ reviews.
 
 Automation first checks each event, and only events that can start agent work go
 on to the agent's own workflow: a collaborator adding `ready-for-agent` to an
-issue opened by a collaborator or an agent, and a collaborator's review that is
-not an approval on a PR from an [issue branch](../CLAUDE.md#branches) in this
-repository, whose issue is in `with-agent` or `agent-failed`. The agent's
-workflow is a reusable workflow that the filtering workflow calls, so it runs
-within the same workflow run and sees the original event and the collaborator
-who caused it. The Claude GitHub App is never listed in `allowed_bots`, so
-agents cannot start runs themselves. If a collaborator adds `ready-for-agent` to
-an issue opened by anyone else, automation removes the label and comments
-instead of starting a run. If they add it to an issue with an open PR,
-automation moves the issue to `with-agent` instead of starting a run, and
-comments that a review starts the next run.
+issue opened by a collaborator or an agent, and a qualifying review: a
+collaborator's review that is not an approval on a PR from an
+[issue branch](../CLAUDE.md#branches) in this repository, whose issue is in
+`with-agent` or `agent-failed`. The agent's workflow is a reusable workflow that
+the filtering workflow calls, so it runs within the same workflow run and sees
+the original event and the collaborator who caused it. The Claude GitHub App is
+never listed in `allowed_bots`, so agents cannot start runs themselves. If a
+collaborator adds `ready-for-agent` to an issue opened by anyone else,
+automation removes the label and comments instead of starting a run. If they add
+it to an issue with an open PR, automation moves the issue to `with-agent`
+instead of starting a run, and comments that a review starts the next run.
 
 ### Concurrency
 
@@ -439,6 +439,9 @@ status label. Agents start no new work on an issue with `with-collaborator`.
   issue branches turn out to be left behind, the fix is for automation to delete
   them on merge, as it does for
   [rejected pull requests](#rejected-pull-requests).
+- Failures of automation itself, such as the failure handler or the takeover
+  cancel failing, are visible only in workflow logs. An issue can then be left
+  in a stale state with no comment explaining why.
 
 ## Future Work
 
