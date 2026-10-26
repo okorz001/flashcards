@@ -194,8 +194,11 @@ An agent implements an issue as follows:
    comment that the run stopped and change nothing else. Otherwise add
    `with-agent`, then remove `ready-for-agent`, so the issue always has a status
    label and a run that crashes from here on is visible.
-2. Check that the issue is open and has no open PR. If not, comment saying so,
-   replace `with-agent` with `with-collaborator`, and stop.
+2. If the issue is closed, comment saying so, replace `with-agent` with
+   `with-collaborator`, and stop. If it has an open PR, keep `with-agent`,
+   comment that a review starts the next run, and stop, as
+   [automation](#triggers) does when `ready-for-agent` is added to such an
+   issue.
 3. If an [issue branch](../CLAUDE.md#branches) exists, continue it: it holds
    earlier work on the issue. If more than one exists and the plan does not name
    which to continue, comment listing them and asking which to continue, replace
