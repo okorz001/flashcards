@@ -106,7 +106,8 @@ stateDiagram-v2
     [*] --> NeedsTriage: Collaborator or agent opens issue
     [*] --> ReadyForAgent: Collaborator opens a fully planned issue
     [*] --> ExternalReport: Anyone else opens issue
-    [*] --> NeedsTriage: Collaborator reopens issue
+    [*] --> NeedsTriage: Issue reopened
+    [*] --> ExternalReport: Issue reopened
     ExternalReport --> [*]: Fixed by a linked issue, or declined
 
     NeedsTriage --> ReadyForAgent: Collaborator writes plan
@@ -171,8 +172,9 @@ or to `ready-for-agent` if it does not. A state change adds the new label before
 removing the old one, so an issue never loses its label partway through a
 change. Failure handling can move an issue to `agent-failed` from any state
 except `with-collaborator`. A collaborator can close an issue as not planned in
-any state. When an issue is reopened, automation moves it to `needs-triage` and
-comments that it needs triage again.
+any state. When an issue is reopened, automation gives it the state a new issue
+would get, `external-report` or `needs-triage`, and comments that it was
+reopened.
 
 ### Triage
 
