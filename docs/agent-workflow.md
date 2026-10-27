@@ -256,10 +256,10 @@ started the run:
   [run summary comment](#run-summary-comment) on the PR.
 
 A review run first checks that the issue still has `with-agent` or
-`agent-failed`, does not have `with-collaborator`, and that the PR is still
-open, because these can change while the run waits to start. If not, it comments
-that it stopped and changes nothing else. If the issue has `agent-failed`, the
-run replaces it with `with-agent`, which is how a review
+`agent-failed`, does not have `with-collaborator`, and that the issue and the PR
+are still open, because these can change while the run waits to start. If not,
+it comments that it stopped and changes nothing else. If the issue has
+`agent-failed`, the run replaces it with `with-agent`, which is how a review
 [retries](#failure-handling) a failed issue.
 
 The agent follows review instructions that fit the issue's plan, such as fixes,
@@ -294,19 +294,25 @@ instruction that fits the plan settles it, or changes the plan.
 
 ### Rejected Pull Requests
 
-A collaborator rejects a PR by closing it without merging. If the PR comes from
-an [issue branch](../CLAUDE.md#branches) in this repository and its issue is
-open, automation first cancels the issue's agent runs, waiting or in progress,
-and waits for them to end, as when [stopping agents](#stopping-agents). It then
-sets the issue's status label to `needs-triage`, replacing any other, comments
-on the issue with a link to the closed PR, and deletes the PR's branch, so the
-next agent starts from `main`. The closed PR keeps its commits and discussion
-for triage. Other closed PRs are left alone.
+A collaborator rejects a PR by closing it without merging, and automation
+[cleans up](#cleanup). If the PR comes from an
+[issue branch](../CLAUDE.md#branches) in this repository and its issue is open,
+automation then sets the issue's status label to `needs-triage`, replacing any
+other, and comments on the issue with a link to the closed PR. The closed PR
+keeps its commits and discussion for triage. Other closed PRs are left alone.
 
 ### Merge
 
 When a collaborator merges the PR, its closing keywords close the issue and any
-external report it links to, and GitHub deletes the PR's branch automatically.
+external report it links to, and automation [cleans up](#cleanup).
+
+### Cleanup
+
+When a PR from an [issue branch](../CLAUDE.md#branches) in this repository
+closes, merged or not, automation cancels the issue's agent runs, waiting or in
+progress, waits for them to end, and deletes the PR's branch, so the next agent
+starts from `main`. When an issue closes, automation cancels its agent runs the
+same way.
 
 ## Agent Runs
 
@@ -441,11 +447,6 @@ status label.
   token through its job's OIDC credentials could ask for it, then change
   workflow files and act as automation. [Future work](#future-work) replaces the
   App with one that does not have the permission.
-- GitHub's automatic deletion of merged branches may only work when a repository
-  admin merges, because the `issue-*/**` ruleset forbids deletion. If merged
-  issue branches turn out to be left behind, the fix is for automation to delete
-  them on merge, as it does for
-  [rejected pull requests](#rejected-pull-requests).
 - Failures of automation itself, such as the failure handler or the takeover
   cancel failing, are visible only in workflow logs. An issue can then be left
   in a stale state with no comment explaining why.
