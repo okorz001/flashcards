@@ -76,7 +76,9 @@ Agents never merge PRs, close issues, force push, or delete remote branches.
 GitHub enforces the rules that protect code:
 
 - The ruleset on `main` requires a PR with passing CI and an approving review
-  from a collaborator, and forbids force pushes and deletion. The Claude GitHub
+  from a collaborator, and forbids force pushes and deletion. It dismisses an
+  approval when new commits are pushed and requires approval of the most recent
+  push, so every agent commit is approved before it merges. The Claude GitHub
   App never bypasses it, so agents cannot merge.
 - The ruleset on `issue-*/**` forbids force pushes and deletion. Only repository
   admins, who manage the repository by hand when needed, and the
