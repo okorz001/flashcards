@@ -81,9 +81,9 @@ GitHub enforces the rules that protect code:
   push, so every agent commit is approved before it merges. The Claude GitHub
   App never bypasses it, so agents cannot merge.
 - The ruleset on `issue-*/**` forbids force pushes and deletion. Only repository
-  admins, who manage the repository by hand when needed, and the
-  [rejected pull request](#rejected-pull-requests) automation bypass it, so
-  agents cannot rewrite or delete issue branches.
+  admins, who manage the repository by hand when needed, and GitHub Actions,
+  which only automation jobs act as, bypass it, so agents cannot rewrite or
+  delete issue branches.
 - Agents act as the Claude GitHub App, and automation acts as GitHub Actions. An
   agent job's own `GITHUB_TOKEN` is read-only and is not stored in its git
   config, so an agent cannot act as automation. Only automation jobs get a
@@ -287,9 +287,10 @@ while a PR is open, a collaborator [takes the issue over](#states), edits the
 plan, and hands it back with a new review. If the change is significant enough
 to discard the current work, they close the PR instead, as described in
 [rejected pull requests](#rejected-pull-requests). If a review run finds the
-plan wrong or incomplete, it changes nothing and raises it in its run summary
-comment on the PR, with options and a recommendation. A collaborator answers in
-a review if an instruction that fits the plan settles it, or changes the plan.
+plan wrong or incomplete, it makes no change for the affected feedback,
+addresses the rest, and raises it in its run summary comment on the PR, with
+options and a recommendation. A collaborator answers in a review if an
+instruction that fits the plan settles it, or changes the plan.
 
 ### Rejected Pull Requests
 
@@ -313,10 +314,10 @@ external report it links to, and GitHub deletes the PR's branch automatically.
 
 Agents are started by GitHub Actions:
 
-| Event                                                 | Agent Task          |
-| ----------------------------------------------------- | ------------------- |
-| Collaborator adds `ready-for-agent` to an issue       | Implement the issue |
-| Collaborator submits a [qualifying review](#triggers) | Address the review  |
+| Event                                           | Agent Task          |
+| ----------------------------------------------- | ------------------- |
+| Collaborator adds `ready-for-agent` to an issue | Implement the issue |
+| Collaborator submits a qualifying review        | Address the review  |
 
 A collaborator can do the same tasks in an interactive Claude Code session.
 
@@ -378,23 +379,22 @@ no cutoff, so the previous one stays in effect.
 If the agent job fails or is cancelled, for example from a crash, timeout, or
 usage limit, automation replaces the issue's status labels with `agent-failed`
 and comments, where the run would have posted its
-[run summary comment](#run-summary-comment), with a link to the run. If the
-issue has `with-collaborator`, it only comments. This automation is a separate
-job in the agent's workflow, after the agent job, so it finishes before the
-issue's next queued run can start. It runs only when the agent job failed or was
-cancelled, and never when the agent job succeeded or was skipped. It runs as
-automation, not as the agent, on its own runner. Queued runs that GitHub drops
-never start, so they never trigger it. A collaborator retries by replacing
-`agent-failed` with `ready-for-agent` if the issue has no PR, or by submitting a
-review if it has one.
+[run summary comment](#run-summary-comment), with a link to the run, saying
+whether it failed or was cancelled. If the issue has `with-collaborator`, it
+only comments. This automation is a separate job in the agent's workflow, after
+the agent job, so it finishes before the issue's next queued run can start. It
+runs only when the agent job failed or was cancelled, and never when the agent
+job succeeded or was skipped. It runs as automation, not as the agent, on its
+own runner. Queued runs that GitHub drops never start, so they never trigger it.
+A collaborator retries by replacing `agent-failed` with `ready-for-agent` if the
+issue has no PR, or by submitting a review if it has one.
 
 ### Stopping Agents
 
-A collaborator stops agents working on an issue by moving it to
-`with-collaborator`. When a collaborator, not an agent, makes that change,
+When a collaborator, not an agent, moves an issue to `with-collaborator`,
 automation cancels the issue's agent runs, waiting or in progress, and once they
 have ended, if the issue is still `with-collaborator`, removes every other
-status label. Agents start no new work on an issue with `with-collaborator`.
+status label.
 
 ## Accepted Tradeoffs
 
