@@ -104,7 +104,6 @@ as a status label of the same name.
 ```mermaid
 stateDiagram-v2
     [*] --> NeedsTriage: Collaborator or agent opens issue
-    [*] --> ReadyForAgent: Collaborator opens a fully planned issue
     [*] --> ExternalReport: Anyone else opens issue
     [*] --> NeedsTriage: Issue reopened
     [*] --> ExternalReport: Issue reopened
@@ -160,10 +159,11 @@ stateDiagram-v2
 | `with-collaborator` | A collaborator owns the issue, so agents start no new work on it                |
 | `external-report`   | Opened by someone other than a collaborator or an agent, so never worked on     |
 
-Automation sets the state of every new issue. An issue opened by anyone other
-than a collaborator or an agent gets `external-report`. Any other issue gets
-`needs-triage`, unless a collaborator opens it already fully planned and labels
-it `ready-for-agent` directly.
+Automation sets the state of every new issue: `external-report` if it was opened
+by anyone other than a collaborator or an agent, and `needs-triage` otherwise,
+replacing any status label set when it was opened. Such labels never start a
+run. A collaborator then moves the issue on, for example straight to
+`ready-for-agent` if it is already fully planned.
 
 A collaborator takes an issue over from agents by moving it to
 `with-collaborator`, which also [stops agents](#stopping-agents). They hand it
