@@ -187,7 +187,7 @@ into the plan. When the plan is complete, a collaborator moves the issue to
 `ready-for-agent`.
 
 A collaborator who accepts an [`external-report`](#states) opens a new issue
-with the plan that links to it.
+that links to it and contains the plan.
 
 ### Implementation
 
@@ -334,8 +334,8 @@ reviews.
 Automation first checks each event, and only events that can start agent work go
 on to the agent's own workflow: a collaborator adding `ready-for-agent` to an
 issue opened by a collaborator or an agent, and a qualifying review: a
-collaborator's review that is not an approval on a PR from an
-[issue branch](../CLAUDE.md#branches) in this repository, whose issue is in
+collaborator's non-approving review on a PR from an
+[issue branch](../CLAUDE.md#branches) in this repository whose issue is in
 `with-agent` or `agent-failed`. The agent's workflow is a reusable workflow that
 the filtering workflow calls, so it runs within the same workflow run and sees
 the original event and the collaborator who caused it. The Claude GitHub App is
