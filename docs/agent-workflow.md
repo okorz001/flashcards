@@ -195,7 +195,7 @@ An agent implements an issue as follows:
 
 1. If the issue no longer has `ready-for-agent` or has `with-collaborator`,
    because a collaborator took it over or an earlier run already started it,
-   comment that the run stopped and change nothing else. Otherwise add
+   comment that the run stopped and why, and change nothing else. Otherwise add
    `with-agent`, then remove `ready-for-agent`, so the issue always has a status
    label and a run that crashes from here on is visible.
 2. If the issue is closed, comment saying so, replace `with-agent` with
