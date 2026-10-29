@@ -168,13 +168,14 @@ run. A collaborator then moves the issue on, for example straight to
 A collaborator takes an issue over from agents by moving it to
 `with-collaborator`, which also [stops agents](#stopping-agents). They hand it
 back by moving it to `with-agent` followed by a new review if it has an open PR,
-or to `ready-for-agent` if it does not. A state change adds the new label before
-removing the old one, so an issue never loses its label partway through a
-change. Failure handling can move an issue to `agent-failed` from any state
-except `with-collaborator`. A collaborator can close an issue as not planned in
-any state. When an issue is reopened, automation gives it the state a new issue
-would get, `external-report` or `needs-triage`, and comments that it was
-reopened.
+or to `ready-for-agent` if it does not. A state change is two label changes,
+which GitHub reports as separate events, so it removes the old label before
+adding the new one. An issue interrupted in between has no status label: it is
+in no state, and agents start nothing on it. Failure handling can move an issue
+to `agent-failed` from no state or any state except `with-collaborator`. A
+collaborator can close an issue as not planned in any state. When an issue is
+reopened, automation gives it the state a new issue would get, `external-report`
+or `needs-triage`, and comments that it was reopened.
 
 ### Triage
 
@@ -195,9 +196,8 @@ An agent implements an issue as follows:
 
 1. If the issue no longer has `ready-for-agent` or has `with-collaborator`,
    because a collaborator took it over or an earlier run already started it,
-   comment that the run stopped and why, and change nothing else. Otherwise add
-   `with-agent`, then remove `ready-for-agent`, so the issue always has a status
-   label and a run that crashes from here on is visible.
+   comment that the run stopped and why, and change nothing else. Otherwise
+   remove `ready-for-agent`, then add `with-agent`.
 2. If the issue is closed, comment saying so, replace `with-agent` with
    `with-collaborator`, and stop. If it has an open PR, keep `with-agent`,
    comment that a review starts the next run, and stop, as
