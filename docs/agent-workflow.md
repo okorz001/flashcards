@@ -169,13 +169,13 @@ A collaborator takes an issue over from agents by moving it to
 `with-collaborator`, which also [stops agents](#stopping-agents). They hand it
 back by moving it to `with-agent` followed by a new review if it has an open PR,
 or to `ready-for-agent` if it does not. A state change is two label changes,
-which GitHub reports as separate events, so it removes the old label before
-adding the new one. An issue interrupted in between has no status label: it is
-in no state, and agents start nothing on it. Failure handling can move an issue
-to `agent-failed` from no state or any state except `with-collaborator`. A
-collaborator can close an issue as not planned in any state. When an issue is
-reopened, automation gives it the state a new issue would get, `external-report`
-or `needs-triage`, and comments that it was reopened.
+which GitHub reports as separate events. It removes the old label before adding
+the new one, so nothing ever sees an issue in two states. An issue interrupted
+in between has no status label: it is in no state, and agents start nothing on
+it. Failure handling can move an issue to `agent-failed` from no state or any
+state except `with-collaborator`. A collaborator can close an issue as not
+planned in any state. When an issue is reopened, automation sets its state as it
+does for a new issue, and comments that it was reopened.
 
 ### Triage
 
@@ -312,7 +312,8 @@ When a PR from an [issue branch](../CLAUDE.md#branches) in this repository
 closes, merged or not, automation cancels the issue's agent runs, waiting or in
 progress, waits for them to end, and deletes the PR's branch, so the next agent
 starts from `main`. When an issue closes, automation cancels its agent runs the
-same way.
+same way, then removes its status label, since a closed issue has no state. It
+keeps `external-report`, which also serves as a tag for finding past reports.
 
 ## Agent Runs
 
@@ -449,7 +450,7 @@ status label.
   App with one that does not have the permission.
 - Failures of automation itself, such as the failure handler or the takeover
   cancel failing, are visible only in workflow logs. An issue can then be left
-  in a stale state with no comment explaining why.
+  in a stale state or with no status label, with no comment explaining why.
 
 ## Future Work
 
