@@ -16,15 +16,16 @@ Despite this, we aim for professional, production-quality standards. One
 significant exception is to avoid unnecessary expense: prefer free tools and
 services.
 
-- **Follow the agreed plan.** Work is planned before it is marked
-  `ready-for-work` (see GitHub below). Implement the plan in the issue. If the
-  plan turns out to be wrong or incomplete, stop and raise it on the issue
-  instead of improvising. For work requested outside an issue, propose a plan
-  and get approval before implementing.
+- **Follow the agreed plan.** Implement the
+  [agreed plan](docs/agent-workflow.md#triage). If the plan turns out to be
+  wrong or incomplete, stop and raise it on the issue, or on its PR if one is
+  open, instead of improvising. For work requested outside an issue, propose a
+  plan and get approval before implementing.
 - **Treat the plan as literal.** When the plan says to copy, generate, or use
   something as-is, do exactly that. Do not remove, add, or modify parts of it.
-  If something blocks or breaks the literal plan, stop and raise it on the issue
-  with options and a recommendation. Do not work around it and report afterward.
+  If something blocks or breaks the literal plan, stop and raise it on the
+  issue, or on its PR if one is open, with options and a recommendation. Do not
+  work around it and report afterward.
 - **Do not make arbitrary choices.** If a decision is not already settled by
   this file, the `docs/` directory, the issue, or existing code, ask. This
   includes adding or replacing a dependency, pinning or choosing a dependency
@@ -82,24 +83,23 @@ Work is tracked in GitHub issues. Each issue should be a single task that can be
 completed in one PR. If an issue is too large for that, split it into
 sub-issues, each completable in one PR.
 
-Every issue is labeled as either `bug` or `enhancement`. Two more labels track
-where an issue stands:
-
-| Label            | Meaning                                                             |
-| ---------------- | ------------------------------------------------------------------- |
-| `needs-triage`   | Filed by an agent; not yet reviewed by a human                      |
-| `ready-for-work` | Agreed to be legitimate, with a defined plan; agents may pick it up |
-
+Every issue is labeled as either `bug` or `enhancement`.
+[Status labels](docs/agent-workflow.md#states) store where an issue stands.
 Label names use lowercase kebab-case (e.g. `needs-triage`).
 
-Agents may only pick up issues labeled `ready-for-work`. Do not start work on an
-issue without this label, even if it seems straightforward; ask instead.
+You may file issues for work you discover but do not do as part of the current
+change: bugs, refactors, or feature ideas. Describe the problem or proposal and
+how it was found; for bugs, include how to reproduce it if known. Do not act on
+it in the current change unless asked.
 
-Agents may file issues for work they discover but do not do as part of the
-current change: bugs, refactors, or feature ideas. Every agent-filed issue must
-have the `needs-triage` label, which is removed once a human has reviewed it.
-Describe the problem or proposal and how it was found; for bugs, include how to
-reproduce it if known. Do not act on it in the current change unless asked.
+### Branches
+
+Branch names are short, descriptive, and kebab-case, e.g.
+`label-lifecycle-rules`. Branches for an issue start with the issue number:
+`issue-<number>/<description>`, e.g. `issue-5/ci-workflow`. This prefix
+[opts the branch in](docs/agent-workflow.md#issue-lifecycle) to the agent
+workflow, so a collaborator who wants to keep work on an issue out of it uses a
+different name.
 
 ### Pull Requests
 
@@ -139,7 +139,20 @@ in-depth detail.
 
 ## Docs Style
 
-All Markdown section headers and table headers must use title case.
+- Every Markdown doc starts with a `#` title, followed by a brief 1-3 sentence
+  description starting with "This document".
+- Every doc in `docs/` has a `## Requirements` section right after its
+  description. When writing or changing a doc whose requirements are missing,
+  ask for them instead of writing them yourself.
+- Writing is brief; avoid filler.
+- Avoid excessive semicolons. Em dashes are fine in a definition list, but
+  should be used sparingly to combine clauses.
+- Prefer linking directly from the relevant word in prose over standalone
+  parenthetical notes like "(see ...)".
+- Section headers and table headers are title cased.
+- Use "agent" only for the role defined in the
+  [agent workflow](docs/agent-workflow.md#roles). Refer to Claude in general as
+  "Claude", or as "you" in `CLAUDE.md`.
 
 ## Code Style
 
