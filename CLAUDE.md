@@ -123,6 +123,11 @@ When adding a GitHub Actions action, use the same version already used by other
 jobs in the workflow files if it exists. Only when introducing an action not yet
 used anywhere should you look up and use its latest stable release.
 
+Keep workflow YAML declarative. Any step whose logic is more than a couple of
+lines belongs in a committed script under `.github/scripts/`, invoked by the
+workflow — not written inline. The script must be runnable and checkable on its
+own, without going through the workflow file.
+
 ## Docs
 
 Project documentation lives in the `docs/` directory. Read the relevant docs

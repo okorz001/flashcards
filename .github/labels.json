@@ -1,0 +1,40 @@
+{
+  "renames": [{ "from": "ready-for-work", "to": "ready-for-agent" }],
+  "labels": [
+    {
+      "name": "needs-triage",
+      "color": "fbca04",
+      "description": "Needs review by a collaborator before an agent may start it"
+    },
+    {
+      "name": "ready-for-agent",
+      "color": "0e8a16",
+      "description": "Agreed, with a plan in the issue body, so an agent may start it"
+    },
+    {
+      "name": "with-agent",
+      "color": "1d76db",
+      "description": "An agent owns the issue and its PR, so its plan is frozen"
+    },
+    {
+      "name": "agent-blocked",
+      "color": "d93f0b",
+      "description": "An agent stopped on a question, and needs triage again"
+    },
+    {
+      "name": "agent-failed",
+      "color": "b60205",
+      "description": "An agent run failed, and a collaborator checks why before a retry"
+    },
+    {
+      "name": "with-collaborator",
+      "color": "5319e7",
+      "description": "A collaborator owns the issue, so agents start no new work on it"
+    },
+    {
+      "name": "external-report",
+      "color": "c5def5",
+      "description": "Opened by someone other than a collaborator or an agent, so never worked on"
+    }
+  ]
+}
