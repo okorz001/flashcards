@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/labels.json
-      - .github/scripts/sync-labels.py
+      - .github/scripts/sync-labels/**
       - .github/workflows/sync-labels.yml
   workflow_dispatch:
 
@@ -17,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: python3 .github/scripts/sync-labels.py
+      - run: python3 .github/scripts/sync-labels/main.py
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
