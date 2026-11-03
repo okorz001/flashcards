@@ -1,0 +1,21 @@
+name: Issue Lifecycle
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 .github/scripts/issue-lifecycle/main.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          ACTION: ${{ github.event.action }}
+          ASSOCIATION: ${{ github.event.issue.author_association }}

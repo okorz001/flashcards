@@ -13,7 +13,7 @@ def gh(*args: str) -> bool:
 
 def main() -> None:
     repo = os.environ["REPO"]
-    default_data_file = Path(__file__).resolve().parent / "labels.json"
+    default_data_file = Path(__file__).resolve().parents[2] / "labels.json"
     data_file = sys.argv[1] if len(sys.argv) > 1 else default_data_file
     with open(data_file) as f:
         data = json.load(f)
