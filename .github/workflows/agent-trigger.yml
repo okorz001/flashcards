@@ -1,0 +1,37 @@
+name: Agent Trigger
+
+on:
+  issues:
+    types: [labeled]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  filter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    outputs:
+      task: ${{ steps.filter.outputs.task }}
+      issue: ${{ steps.filter.outputs.issue }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - id: filter
+        run: python3 .github/scripts/agent-trigger/main.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+
+  agent:
+    needs: filter
+    if: needs.filter.outputs.task != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/agent.yml
+    with:
+      task: ${{ needs.filter.outputs.task }}
+      issue: ${{ needs.filter.outputs.issue }}
