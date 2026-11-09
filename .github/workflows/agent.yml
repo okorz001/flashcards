@@ -1,0 +1,26 @@
+name: Agent
+
+on:
+  workflow_call:
+    inputs:
+      task:
+        type: string
+        required: true
+      issue:
+        type: string
+        required: true
+
+concurrency:
+  group: agent-${{ inputs.issue }}
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Stub: would run task $TASK for issue $ISSUE"
+          sleep 20
+        env:
+          TASK: ${{ inputs.task }}
+          ISSUE: ${{ inputs.issue }}
